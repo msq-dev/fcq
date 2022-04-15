@@ -117,7 +117,20 @@ body {
   font-family: "Rubik", sans-serif;
   font-weight: 300;
   background-color: #b0c3cb;
+}
+
+html,
+body {
+  position: fixed;
+  overflow: hidden;
+}
+
+.mainwrapper {
   position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 
 main {

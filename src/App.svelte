@@ -23,16 +23,18 @@
   }
 </script>
 
-<Router {routes} />
+<div class="mainwrapper">
+  <Router {routes} restorScrollState={true} />
 
-{#if $location !== "/"}
-  <nav class="shadow" transition:fade={{ duration: 100 }}>
-    <a href="/" use:link use:active>Home</a>
-    <!-- <a href="/game" use:link use:active>Spielen</a> -->
-    <a href="/browse" use:link use:active>{t.browse}</a>
-    <a href="/settings" use:link use:active>{t.settings}</a>
-  </nav>
-{/if}
+  {#if $location !== "/" && $location !== "/settings"}
+    <nav class="shadow" transition:fade={{ duration: 100 }}>
+      <a href="/" use:link use:active>Home</a>
+      <!-- <a href="/game" use:link use:active>Spielen</a> -->
+      <a href="/browse" use:link use:active>{t.browse}</a>
+      <a href="/settings" use:link use:active>{t.settings}</a>
+    </nav>
+  {/if}
+</div>
 
 <style>
   :global(a.active) {

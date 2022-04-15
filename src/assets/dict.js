@@ -11,6 +11,7 @@ export default {
     language: "Language",
     categories: "Categories",
     fetching: "Fetching card",
+    saveAndClose: "Save and close",
   },
   de: {
     born: "geb.",
@@ -24,5 +25,6 @@ export default {
     language: "Sprache",
     categories: "Kategorien",
     fetching: "Lade Karten",
+    saveAndClose: "Speichern und schließen",
   },
 }
