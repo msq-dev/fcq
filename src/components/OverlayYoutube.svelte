@@ -85,11 +85,6 @@
     font-size: 130%;
   }
 
-  /* .maiden-name {
-    display: block;
-    font-size: 75%;
-  } */
-
   .btn-close {
     position: absolute;
     right: 1em;
@@ -103,9 +98,5 @@
   .yt-title {
     font-weight: 400;
     font-style: italic;
-  }
-
-  .title-year {
-    font-style: normal;
   }
 </style>
