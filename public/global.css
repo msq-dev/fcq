@@ -1,0 +1,140 @@
+@font-face {
+  font-family: "Rubik";
+  src: url("https://apps.maxspuling.de/assets/fcq/fonts/Rubik-VariableFont_wght.ttf")
+    format("truetype-variations");
+  font-weight: 100 900;
+}
+
+@font-face {
+  font-family: "Rubik";
+  src: url("https://apps.maxspuling.de/assets/fcq/fonts/Rubik-Italic-VariableFont_wght.ttf")
+    format("truetype-variations");
+  font-weight: 100 900;
+  font-style: italic;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  line-height: calc(1em + 0.5rem);
+  touch-action: manipulation;
+}
+
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a[href],
+area,
+button,
+input,
+label[for],
+select,
+summary,
+textarea,
+[tabindex] {
+  cursor: pointer;
+}
+
+input,
+button,
+textarea,
+select {
+  color: inherit;
+  font: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+button {
+  border: none;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:root {
+  --user-light: #f87681;
+  --user-dark: #7f3c41;
+  --npc-light: #e1edeb;
+  --npc-dark: #647d85;
+  --gray: #aaa;
+  --warning: #d12b37;
+}
+
+body {
+  font-family: "Rubik", sans-serif;
+  font-weight: 300;
+  background-color: #b0c3cb;
+  position: relative;
+}
+
+main {
+  width: min(100% - 2rem, 65ch);
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+/* Utilities */
+.rounded {
+  border-top-left-radius: var(--br-size, 0.5rem);
+  border-top-right-radius: var(--br-size, 0.5rem);
+  border-bottom-right-radius: var(--br-size, 0.5rem);
+  border-bottom-left-radius: var(--br-size, 0.5rem);
+}
+
+.shadow {
+  box-shadow: 0 0 var(--shadow-size, 1rem) var(--shadow-clr, rgb(0 0 0 / 0.25));
+}
