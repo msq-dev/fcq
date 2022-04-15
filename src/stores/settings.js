@@ -1,3 +1,3 @@
 import { writable } from "svelte/store"
 
-export const appLanguage = writable("de")
+export const appLanguage = writable("en")

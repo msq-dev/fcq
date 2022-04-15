@@ -9,6 +9,8 @@ export default {
     settings: "Settings",
     browse: "Browse",
     language: "Language",
+    categories: "Categories",
+    fetching: "Fetching card",
   },
   de: {
     born: "geb.",
@@ -20,5 +22,7 @@ export default {
     settings: "Einstellungen",
     browse: "Stöbern",
     language: "Sprache",
+    categories: "Kategorien",
+    fetching: "Lade Karten",
   },
 }

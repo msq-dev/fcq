@@ -1,4 +1,5 @@
 <script>
+  import { fade } from "svelte/transition"
   import { link } from "svelte-spa-router"
   import { appLanguage } from "../stores/settings.js"
   import dict from "../assets/dict.js"
@@ -6,7 +7,7 @@
   const t = dict[$appLanguage]
 </script>
 
-<main class="centered">
+<main class="centered" transition:fade={{ duration: 100, delay: 100 }}>
   <h1>Female<br />Composers<br />Quartets</h1>
   <a href="/browse" class="nav-button" use:link>&rarr; {t.browse}</a>
   <a href="/settings" class="nav-button" use:link>&rarr; {t.settings}</a>

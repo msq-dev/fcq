@@ -99,4 +99,8 @@
     font-weight: 400;
     font-style: italic;
   }
+
+  .yt-desc {
+    font-size: 90%;
+  }
 </style>

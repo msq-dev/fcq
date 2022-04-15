@@ -31,6 +31,19 @@
 
   const dateOptions = { year: "numeric", month: "long", day: "numeric" }
 
+  const colors = [
+    "#7786B8",
+    "#5274EB",
+    "#916349",
+    "#72855D",
+    "#243338",
+    "#858256",
+    "#458499",
+    "#666F91",
+  ]
+
+  const categoryColor = colors[parseInt(index[0])]
+
   const imgBaseUrl = "https://apps.maxspuling.de/assets/fcq/img/"
 
   function formatDate(date) {
@@ -55,7 +68,7 @@
 />
 
 <div class="playing-card rounded">
-  <div class="head-container">
+  <div class="head-container" style:color={categoryColor}>
     <div class="category">{category}</div>
     <div class="index">{index}</div>
   </div>

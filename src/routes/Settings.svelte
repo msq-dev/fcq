@@ -1,11 +1,12 @@
 <script>
+  import { fly } from "svelte/transition"
   import { appLanguage } from "../stores/settings.js"
   import dict from "../assets/dict.js"
 
   $: t = dict[$appLanguage]
 </script>
 
-<main>
+<main in:fly={{ y: 500, delay: 200 }}>
   <h1>{t.settings}</h1>
   <h2>{t.language}</h2>
   <div class="radio-group">

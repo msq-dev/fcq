@@ -1,4 +1,5 @@
 <script>
+  import { fade } from "svelte/transition"
   import Router from "svelte-spa-router"
   import { location, link } from "svelte-spa-router"
   import active from "svelte-spa-router/active"
@@ -25,7 +26,7 @@
 <Router {routes} />
 
 {#if $location !== "/"}
-  <nav class="shadow">
+  <nav class="shadow" transition:fade={{ duration: 100 }}>
     <a href="/" use:link use:active>Home</a>
     <!-- <a href="/game" use:link use:active>Spielen</a> -->
     <a href="/browse" use:link use:active>{t.browse}</a>
