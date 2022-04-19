@@ -1,7 +1,8 @@
 <script>
   import { onMount } from "svelte"
   import { fade } from "svelte/transition"
-  import { deck } from "../stores/game.js"
+  import { appLanguage } from "../stores/settings.js"
+  import { decks } from "../stores/game.js"
   import PlayingCard from "./PlayingCard.svelte"
 
   export let cat
@@ -9,7 +10,7 @@
   let cardsInCat = []
 
   onMount(() => {
-    cardsInCat = $deck.filter((card) => card.category === cat)
+    cardsInCat = $decks[$appLanguage].filter((card) => card.category === cat)
   })
 </script>
 

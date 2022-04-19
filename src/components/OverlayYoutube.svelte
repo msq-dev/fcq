@@ -1,13 +1,16 @@
 <script>
   import { createEventDispatcher } from "svelte"
   import { fade } from "svelte/transition"
+  import { appLanguage } from "../stores/settings.js"
+  import dict from "../assets/dict.js"
 
   export let ytOverlay
   export let ytId
   export let ytTitle
   export let ytDesc
   export let name
-  export let nameMaiden
+
+  $: t = dict[$appLanguage]
 
   $: formattedTitle = ytTitle.replace(
     /(\([a-z . 0-9]+\))/g,
@@ -23,31 +26,8 @@
 
 {#if ytOverlay}
   <div class="overlay" transition:fade={{ duration: 100 }}>
-    <div class="btn-close" on:click={() => closeOverlay()}>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="feather feather-x-circle"
-        ><circle cx="12" cy="12" r="10" /><line
-          x1="15"
-          y1="9"
-          x2="9"
-          y2="15"
-        /><line x1="9" y1="9" x2="15" y2="15" /></svg
-      >
-    </div>
     <div class="names-container">
       <div class="name">{name}</div>
-      <!-- {#if nameMaiden}
-        <div class="maiden-name">(b. {nameMaiden})</div>
-      {/if} -->
     </div>
     <iframe
       class="yt-iframe"
@@ -61,7 +41,12 @@
       {@html formattedTitle}
     </div>
     <div class="yt-desc">{ytDesc}</div>
-    <div class="app-title">Female Composers Quartets</div>
+    <div class="overlay-footer">
+      <div class="btn-close | rounded" on:click={() => closeOverlay()}>
+        {t.close}
+      </div>
+      <div class="app-title">Female Composers Quartets</div>
+    </div>
   </div>
 {/if}
 
@@ -85,12 +70,6 @@
     font-size: 130%;
   }
 
-  .btn-close {
-    position: absolute;
-    right: 1em;
-    color: var(--warning);
-  }
-
   .yt-iframe {
     align-self: center;
   }
@@ -102,5 +81,25 @@
 
   .yt-desc {
     font-size: 90%;
+  }
+
+  .overlay-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.7em;
+  }
+
+  .btn-close {
+    --br-size: 100vw;
+
+    font-size: 90%;
+    background-color: var(--warning);
+    padding: 0.2em 1em;
+  }
+
+  .app-title {
+    font-size: 75%;
+    color: var(--gray);
   }
 </style>

@@ -54,7 +54,7 @@
   let birthday = formatDate(dateOfBirth)
   let deathday = formatDate(dateOfDeath)
 
-  let ytOverlay = false
+  let ytOverlay = true
 </script>
 
 <OverlayYoutube
@@ -97,8 +97,8 @@
       <div class="yt-icon" on:click={() => (ytOverlay = true)}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
+          width="30"
+          height="30"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -208,14 +208,13 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: blur(3px);
     opacity: 0.5;
   }
 
   .yt-icon {
     position: absolute;
-    bottom: 0.5em;
-    right: 0.5em;
+    bottom: 0.75em;
+    right: 0.75em;
   }
 
   .stats-table {
@@ -242,7 +241,7 @@
     margin-bottom: -6px;
   }
 
-  :global(.app-title) {
+  .app-title {
     margin-top: 1em;
     text-align: right;
     font-size: 75%;

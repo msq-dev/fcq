@@ -1,9 +1,15 @@
 <script>
+  import { onMount } from "svelte"
   import { fade } from "svelte/transition"
+
   import Router from "svelte-spa-router"
   import { location, link } from "svelte-spa-router"
   import active from "svelte-spa-router/active"
+
+  import { csv } from "d3-fetch"
+
   import { appLanguage } from "./stores/settings.js"
+  import { decks } from "./stores/game.js"
   import dict from "./assets/dict.js"
 
   import Home from "./routes/Home.svelte"
@@ -21,10 +27,24 @@
     "/settings": Settings,
     "*": NotFound,
   }
+
+  function fetchData(lang) {
+    const DATA_URL = `https://apps.maxspuling.de/assets/fcq/data/composers_${lang}.csv`
+    return csv(DATA_URL)
+  }
+
+  onMount(() => {
+    fetchData("en").then((data) => {
+      $decks.en = data
+    })
+    fetchData("de").then((data) => {
+      $decks.de = data
+    })
+  })
 </script>
 
 <div class="mainwrapper">
-  <Router {routes} restorScrollState={true} />
+  <Router {routes} restoreScrollState={true} />
 
   {#if $location !== "/" && $location !== "/settings"}
     <nav class="shadow" transition:fade={{ duration: 100 }}>
