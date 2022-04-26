@@ -1,25 +1,40 @@
 <script>
   import { fly } from "svelte/transition"
+  import { link } from "svelte-spa-router"
   import { pop } from "svelte-spa-router"
-  import { appLanguage } from "../stores/settings.js"
-  import dict from "../assets/dict.js"
-
-  $: t = dict[$appLanguage]
+  import {
+    ytCookiesAccepted,
+    appLanguage,
+    dictionary as t,
+  } from "../stores/settings.js"
 </script>
 
 <main in:fly={{ y: 500, delay: 200 }} out:fly={{ y: 500, duration: 100 }}>
-  <h1>{t.settings}</h1>
-  <h2>{t.language}</h2>
-  <div class="radio-group">
-    <input type="radio" id="de" bind:group={$appLanguage} value={"de"} />
-    <label for="de">Deutsch</label>
+  <h1>{$t.settings}</h1>
+  <div class="settings">
+    <h2>{$t.language}</h2>
+    <div class="input-group">
+      <input type="radio" id="de" bind:group={$appLanguage} value={"de"} />
+      <label for="de">Deutsch</label>
+    </div>
+    <div class="input-group">
+      <input type="radio" id="en" bind:group={$appLanguage} value={"en"} />
+      <label for="en">English</label>
+    </div>
+    <h2>Cookies</h2>
+    <div class="input-group">
+      <input type="checkbox" id="cookies" bind:checked={$ytCookiesAccepted} />
+      <label for="cookies"
+        >{$t.cookieCheckbox}<br />
+        {#if !$ytCookiesAccepted}
+          {$t.see} <a href="/privacy" class="link" use:link>{$t.privacy}</a>
+        {/if}
+      </label>
+    </div>
   </div>
-  <div class="radio-group">
-    <input type="radio" id="en" bind:group={$appLanguage} value={"en"} />
-    <label for="en">English</label>
-  </div>
-  <button class="btn-close rounded" on:click={() => pop()}
-    >{t.saveAndClose}</button
+
+  <button class="btn-close | rounded" on:click={() => pop()}
+    >{$t.saveAndClose}</button
   >
 </main>
 
@@ -31,22 +46,26 @@
   h1 {
     margin-top: 5vh;
     font-weight: 500;
-    margin-bottom: 1em;
+    margin-bottom: 0.3em;
+  }
+
+  .settings {
+    min-height: 50vh;
   }
 
   h2 {
     font-weight: 400;
     padding-bottom: 0.2em;
-    margin-bottom: 0.25em;
+    margin: 0.5em 0;
     border-bottom: 1px dotted var(--npc-dark);
   }
 
-  .radio-group {
+  .input-group {
     accent-color: var(--npc-dark);
     margin-bottom: 0.25em;
   }
 
-  .radio-group input {
+  .input-group input {
     margin-right: 0.2em;
   }
 

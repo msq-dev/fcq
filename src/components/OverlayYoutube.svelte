@@ -1,16 +1,14 @@
 <script>
   import { createEventDispatcher } from "svelte"
   import { fade } from "svelte/transition"
-  import { appLanguage } from "../stores/settings.js"
-  import dict from "../assets/dict.js"
+  import { link } from "svelte-spa-router"
+  import { ytCookiesAccepted, dictionary as t } from "../stores/settings.js"
 
   export let ytOverlay
   export let ytId
   export let ytTitle
   export let ytDesc
   export let name
-
-  $: t = dict[$appLanguage]
 
   $: formattedTitle = ytTitle.replace(
     /(\([a-z . 0-9]+\))/g,
@@ -25,25 +23,42 @@
 </script>
 
 {#if ytOverlay}
-  <div class="overlay" transition:fade={{ duration: 100 }}>
+  <div
+    class="yt-overlay | overlay | flex-col"
+    transition:fade={{ duration: 100 }}
+  >
     <div class="names-container">
       <div class="name">{name}</div>
     </div>
-    <iframe
-      class="yt-iframe"
-      width="300"
-      height="200"
-      src="https://www.youtube.com/embed/{ytId}"
-      title="YouTube video player"
-      frameborder="0"
-    />
+
+    {#if !JSON.parse($ytCookiesAccepted)}
+      <div class="cookie-banner | flex-col">
+        <p>
+          {$t.noVideo}<a href="/privacy" class="link" use:link>{$t.privacy}</a>
+        </p>
+        <button
+          class="btn btn-accept | rounded"
+          on:click={() => ($ytCookiesAccepted = true)}>{$t.accept}</button
+        >
+      </div>
+    {:else}
+      <iframe
+        class="yt-iframe"
+        width="300"
+        height="200"
+        src="https://www.youtube.com/embed/{ytId}"
+        title="YouTube video player"
+        frameborder="0"
+      />
+    {/if}
+
     <div class="yt-title">
       {@html formattedTitle}
     </div>
     <div class="yt-desc">{ytDesc}</div>
     <div class="overlay-footer">
       <div class="btn-close | rounded" on:click={() => closeOverlay()}>
-        {t.close}
+        {$t.close}
       </div>
       <div class="app-title">Female Composers Quartets</div>
     </div>
@@ -51,17 +66,11 @@
 {/if}
 
 <style>
-  .overlay {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 50;
-    display: flex;
-    flex-direction: column;
-    gap: 0.7em;
-    color: ghostwhite;
-    background-color: rgb(0 0 0 / 0.95);
+  .yt-overlay {
+    --align: start;
+    --flex-gap: 0.7em;
+    --opacity: 0.95;
+
     padding: 1em;
   }
 
@@ -87,6 +96,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
     margin-top: 0.7em;
   }
 

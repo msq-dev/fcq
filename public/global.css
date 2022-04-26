@@ -109,8 +109,11 @@ h6 {
   --user-dark: #7f3c41;
   --npc-light: #e1edeb;
   --npc-dark: #647d85;
+  --white: ghostwhite;
   --gray: #aaa;
+  --link: #1790d1;
   --warning: #d12b37;
+  --success: #018522;
 }
 
 body {
@@ -134,9 +137,9 @@ body {
 }
 
 main {
-  width: min(100% - 2rem, 65ch);
   display: flex;
   flex-direction: column;
+  width: min(100% - 2rem, 65ch);
   margin: 0 auto;
 }
 
@@ -150,4 +153,81 @@ main {
 
 .shadow {
   box-shadow: 0 0 var(--shadow-size, 1rem) var(--shadow-clr, rgb(0 0 0 / 0.25));
+}
+
+.link {
+  color: var(--link);
+}
+
+.bold {
+  font-weight: 500;
+}
+
+.upper {
+  text-transform: uppercase;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  align-items: var(--align, center);
+  gap: var(--flex-gap, 1rem);
+}
+
+.grid {
+  display: grid;
+}
+
+.fixed-bottom {
+  position: absolute;
+  inset: auto auto 0 auto;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Blocks */
+.overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+  color: var(--white);
+  background-color: rgb(0 0 0 / var(--opacity, 0.8));
+}
+
+.btn {
+  background-color: var(--bg-color, var(--npc-light));
+  color: currentColor;
+  width: fit-content;
+  padding: 0.2em 0.5em;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.btn-reject {
+  --bg-color: var(--warning);
+}
+
+.btn-accept {
+  --bg-color: var(--success);
+}
+
+.cookie-banner {
+  padding: 1em 1.5em;
+  background-color: #0d374d;
+  color: #fff;
+  width: 100%;
+}
+
+.cookie-banner .btn {
+  --br-size: 100vw;
+  color: #fff;
+  padding: 0.2em 1em;
 }

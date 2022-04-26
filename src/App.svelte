@@ -8,23 +8,24 @@
 
   import { csv } from "d3-fetch"
 
-  import { appLanguage } from "./stores/settings.js"
+  import { dictionary as t } from "./stores/settings.js"
   import { decks } from "./stores/game.js"
-  import dict from "./assets/dict.js"
 
   import Home from "./routes/Home.svelte"
   import Game from "./routes/Game.svelte"
   import Browse from "./routes/Browse.svelte"
   import Settings from "./routes/Settings.svelte"
+  import Privacy from "./routes/Privacy.svelte"
   import NotFound from "./routes/NotFound.svelte"
 
-  $: t = dict[$appLanguage]
+  import IconSettings from "./components/IconSettings.svelte"
 
   const routes = {
     "/": Home,
     "/game": Game,
     "/browse/:cat?": Browse,
     "/settings": Settings,
+    "/privacy": Privacy,
     "*": NotFound,
   }
 
@@ -33,12 +34,64 @@
     return csv(DATA_URL)
   }
 
+  function makePlayingCards(data) {
+    let playingCards = []
+    data.forEach((composer) => {
+      let stats = [
+        {
+          name: "death",
+          value: parseInt(composer.ageAtDeath),
+          highestWins: true,
+        },
+        {
+          name: "works",
+          value: parseInt(composer.noOfWorks),
+          highestWins: true,
+          symbol: ">",
+        },
+        {
+          name: "anniversary",
+          value: parseInt(composer.upcomingAnniversary),
+          highestWins: false,
+        },
+        {
+          name: "awareness",
+          value: parseInt(composer.levelOfAwareness),
+          highestWins: true,
+        },
+        {
+          name: "abilities",
+          value: parseInt(composer.noOfAbilities),
+          highestWins: true,
+          extra: composer.musicalAbilities,
+        },
+      ]
+
+      playingCards.push({
+        stats,
+        index: composer.index,
+        category: composer.category,
+        name: composer.name,
+        nameMaiden: composer.nameMaiden,
+        imageUrl: composer.imageUrl,
+        dateOfBirth: composer.dateOfBirth,
+        placeOfBirth: composer.placeOfBirth,
+        dateOfDeath: composer.dateOfDeath,
+        placeOfDeath: composer.placeOfDeath,
+        ytTitle: composer.ytTitle,
+        ytDesc: composer.ytDesc,
+        ytId: composer.ytId,
+      })
+    })
+    return playingCards
+  }
+
   onMount(() => {
     fetchData("en").then((data) => {
-      $decks.en = data
+      $decks.en = makePlayingCards(data)
     })
     fetchData("de").then((data) => {
-      $decks.de = data
+      $decks.de = makePlayingCards(data)
     })
   })
 </script>
@@ -49,9 +102,11 @@
   {#if $location !== "/" && $location !== "/settings"}
     <nav class="shadow" transition:fade={{ duration: 100 }}>
       <a href="/" use:link use:active>Home</a>
-      <!-- <a href="/game" use:link use:active>Spielen</a> -->
-      <a href="/browse" use:link use:active>{t.browse}</a>
-      <a href="/settings" use:link use:active>{t.settings}</a>
+      <a href="/game" use:link use:active>{$t.play}</a>
+      <a href="/browse" use:link use:active>{$t.browse}</a>
+      <a href="/settings" use:link use:active>
+        <IconSettings size={18} stroke={1.5} />
+      </a>
     </nav>
   {/if}
 </div>

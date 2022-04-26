@@ -1,10 +1,11 @@
 <script>
   import { link } from "svelte-spa-router"
-  export let cat
+  export let catIndex
+  export let catName
 </script>
 
-<a href="/browse/{cat}" class="btn-category | shadow rounded" use:link>
-  <span class="cat-name">{cat}</span>
+<a href="/browse/{catIndex}" class="btn-category | shadow rounded" use:link>
+  <span class="cat-name">{catName}</span>
 </a>
 
 <style>

@@ -1,22 +1,24 @@
 <script>
   import { onMount } from "svelte"
   import { fade } from "svelte/transition"
-  import { appLanguage } from "../stores/settings.js"
+  import { appLanguage, dictionary as t } from "../stores/settings.js"
   import { decks } from "../stores/game.js"
   import CategoryButton from "../components/CategoryButton.svelte"
   import CategoryDetail from "../components/CategoryDetail.svelte"
-  import dict from "../assets/dict.js"
 
   export let params = {}
-
-  $: t = dict[$appLanguage]
 
   let categories = []
 
   function getCategories(cardDeck) {
-    return cardDeck
-      .map((card) => card.category)
-      .filter((value, index, self) => self.indexOf(value) === index)
+    let cats = []
+
+    cardDeck.forEach((card) => {
+      cats.push({ catIndex: card.index[0], catName: card.category })
+    })
+
+    // courtesy of https://stackoverflow.com/a/58429784
+    return [...new Map(cats.map((item) => [item["catIndex"], item])).values()]
   }
 
   onMount(() => {
@@ -29,10 +31,10 @@
   out:fade={{ duration: 100, delay: 0 }}
 >
   {#if !params.cat}
-    <h1>{t.categories}</h1>
+    <h1>{$t.categories}</h1>
     <div class="category-grid">
       {#each categories as cat}
-        <CategoryButton {cat} />
+        <CategoryButton {...cat} />
       {/each}
     </div>
   {:else}
@@ -43,7 +45,6 @@
 <style>
   main {
     padding: 1em 0;
-    margin: 0 auto;
     margin-bottom: 20vh;
   }
 

@@ -1,28 +1,29 @@
 <script>
   import { fade } from "svelte/transition"
   import { link } from "svelte-spa-router"
-  import { appLanguage } from "../stores/settings.js"
-  import dict from "../assets/dict.js"
-
-  const t = dict[$appLanguage]
+  import { ytCookiesAccepted, dictionary as t } from "../stores/settings.js"
+  import BannerCookies from "../components/BannerCookies.svelte"
 </script>
 
-<main class="centered" transition:fade={{ duration: 100, delay: 100 }}>
-  <h1>Female<br />Composers<br />Quartets</h1>
-  <a href="/browse" class="nav-button" use:link>&rarr; {t.browse}</a>
-  <a href="/settings" class="nav-button" use:link>&rarr; {t.settings}</a>
+<main class="home | flex-col" transition:fade={{ duration: 100, delay: 100 }}>
+  <h1 class="text-center bold">Female<br />Composers<br />Quartets</h1>
+  <a href="/browse" class="nav-button" use:link>{$t.browse}</a>
+  <a href="/game" class="nav-button" use:link>{$t.play}</a>
+  <a href="/settings" class="nav-button" use:link>{$t.settings}</a>
+
+  {#if JSON.parse($ytCookiesAccepted) === null}
+    <BannerCookies />
+  {/if}
 </main>
 
 <style>
-  .centered {
-    align-items: center;
-    gap: 2rem;
+  .home {
     margin: 10vh auto 0 auto;
   }
 
-  .centered h1 {
-    text-align: center;
-    font-weight: 500;
+  .nav-button::before {
+    content: "\2192";
+    margin-right: 0.3em;
   }
 
   .nav-button {
