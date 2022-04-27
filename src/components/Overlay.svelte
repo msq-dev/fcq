@@ -1,13 +1,7 @@
-<script>
+<script lang="ts">
   import { createEventDispatcher } from "svelte"
   import { fade } from "svelte/transition"
   import { dictionary as t } from "../stores/settings.js"
-  import {
-    statUser,
-    statNpc,
-    currentCardUser,
-    currentCardNpc,
-  } from "../stores/game.js"
 
   const dispatch = createEventDispatcher()
 
@@ -15,55 +9,40 @@
     dispatch("close")
   }
 
-  export let overlayActive
+  export let active = false
+  export let btnText = $t.close
 </script>
 
-{#if overlayActive}
+{#if active}
   <div
     class="overlay grid"
     on:click={() => close()}
     transition:fade={{ duration: 100 }}
   >
     <div class="overlay-content | flex-col">
-      <div class="message | bold upper">
-        <slot />
+      <div class="headline | bold upper">
+        <slot name="headline" />
+      </div>
+      <div class="body | flex-col">
+        <slot name="body" />
       </div>
 
-      <div class="npc | bold">{$currentCardNpc.name}</div>
-      <div class="npc">
-        {$t[$statNpc.name]}:
-        <span class="bold">{$statNpc.symbol || ""} {$statNpc.value}</span>
-      </div>
-      <div>vs.</div>
-      <div class="user | bold">{$currentCardUser.name}</div>
-      <div class="user">
-        {$t[$statUser.name]}:
-        <span class="bold">{$statUser.symbol || ""} {$statUser.value}</span>
-      </div>
-      <button class="btn btn-continue | rounded">{$t.continue}</button>
+      <button class="btn btn-close | rounded">{btnText}</button>
     </div>
   </div>
 {/if}
 
-<style>
+<style lang="scss">
   .overlay-content {
     --flex-gap: 0.5em;
     place-self: center;
+
+    .headline {
+      font-size: 150%;
+    }
   }
 
-  .message {
-    font-size: 150%;
-  }
-
-  .user {
-    color: var(--user-light);
-  }
-
-  .npc {
-    color: var(--npc-light);
-  }
-
-  .btn-continue {
+  .btn-close {
     color: #000;
     margin-top: 1em;
   }

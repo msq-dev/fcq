@@ -179,7 +179,7 @@ main {
 }
 
 .fixed-bottom {
-  position: absolute;
+  position: fixed;
   inset: auto auto 0 auto;
 }
 

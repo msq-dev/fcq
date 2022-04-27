@@ -1,14 +1,14 @@
-<script>
+<script lang="ts">
   import { createEventDispatcher } from "svelte"
   import { fade } from "svelte/transition"
   import { link } from "svelte-spa-router"
   import { ytCookiesAccepted, dictionary as t } from "../stores/settings.js"
 
-  export let ytOverlay
-  export let ytId
-  export let ytTitle
-  export let ytDesc
-  export let name
+  export let active: boolean
+  export let ytId: string
+  export let ytTitle: string
+  export let ytDesc: string
+  export let name: string
 
   $: formattedTitle = ytTitle.replace(
     /(\([a-z . 0-9]+\))/g,
@@ -22,16 +22,13 @@
   }
 </script>
 
-{#if ytOverlay}
-  <div
-    class="yt-overlay | overlay | flex-col"
-    transition:fade={{ duration: 100 }}
-  >
+{#if active}
+  <div class="yt-overlay | flex-col" transition:fade={{ duration: 100 }}>
     <div class="names-container">
       <div class="name">{name}</div>
     </div>
 
-    {#if !JSON.parse($ytCookiesAccepted)}
+    {#if !$ytCookiesAccepted}
       <div class="cookie-banner | flex-col">
         <p>
           {$t.noVideo}<a href="/privacy" class="link" use:link>{$t.privacy}</a>
@@ -69,9 +66,15 @@
   .yt-overlay {
     --align: start;
     --flex-gap: 0.7em;
-    --opacity: 0.95;
 
     padding: 1em;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 50;
+    color: ghostwhite;
+    background-color: rgb(0 0 0 / 0.95);
   }
 
   .name {

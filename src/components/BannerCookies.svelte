@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { fade, fly } from "svelte/transition"
   import { link } from "svelte-spa-router"
   import { ytCookiesAccepted, dictionary as t } from "../stores/settings.js"

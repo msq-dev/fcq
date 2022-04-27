@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte"
   import { fade } from "svelte/transition"
   import { appLanguage, dictionary as t } from "../stores/settings.js"
@@ -6,12 +6,12 @@
   import CategoryButton from "../components/CategoryButton.svelte"
   import CategoryDetail from "../components/CategoryDetail.svelte"
 
-  export let params = {}
+  export let params: Record<string, string> = {}
 
-  let categories = []
+  let categories: object[] = []
 
-  function getCategories(cardDeck) {
-    let cats = []
+  function getCategories(cardDeck: ComposerCard[]) {
+    let cats: Category[] = []
 
     cardDeck.forEach((card) => {
       cats.push({ catIndex: card.index[0], catName: card.category })

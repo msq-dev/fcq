@@ -1,6 +1,6 @@
-import { writable, derived } from "svelte/store"
+import { writable, derived, Writable } from "svelte/store"
 
-export const decks = writable({ en: [], de: [] })
+export const decks: Writable<Deck> = writable({ en: [], de: [] })
 
 export const sessionRunning = writable(false)
 export const deckUser = writable([])

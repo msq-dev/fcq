@@ -1,11 +1,14 @@
-<script>
+<script lang="ts">
   import { createEventDispatcher } from "svelte"
   import { statNpc, sessionRunning } from "../stores/game.js"
   import { dictionary as t } from "../stores/settings.js"
 
-  $: disabled = $statNpc !== null && $t[$statNpc.name] !== $t[stat.name]
+  export let stat: Stat
 
-  export let stat = {}
+  $: disabled = $statNpc !== null && $t[$statNpc.name] !== $t[stat.name]
+  $: anniversaryInfo = stat.anniversaryInfo
+    ? calculateAnniversary(stat.anniversaryInfo)
+    : ""
 
   const dispatch = createEventDispatcher()
 
@@ -13,31 +16,46 @@
     if (disabled || !$sessionRunning) return
     dispatch("statClicked")
   }
+
+  function calculateAnniversary(a: AnniversaryInfo) {
+    const upcomingYear = a.anniversaryYear
+    const anniversary = a.isBirth
+      ? "&ast;&thinsp;" + String(upcomingYear - a.yearOfBirth)
+      : "&dagger;&thinsp;" + String(upcomingYear - a.yearOfDeath)
+
+    return `<span style="font-size: 75%; margin-left: 0.5em;">(${anniversary})</span>`
+  }
 </script>
 
 <div class="stat" class:disabled on:click={() => statClicked()}>
-  <span class="stat-name">{$t[stat.name]}</span>
-  <span class="stat-value">{stat.symbol || ""} {stat.value}</span>
-  {#if stat.extra}
-    <span class="abilities">{stat.extra}</span>
+  <span class="name">{$t[stat.name]}</span>
+  <span class="value"
+    >{stat.symbol || ""} {stat.value}{@html anniversaryInfo}</span
+  >
+  {#if stat.abilitiesInfo}
+    <span class="abilities">{stat.abilitiesInfo}</span>
   {/if}
 </div>
 
-<style>
+<style lang="scss">
   .stat {
     display: grid;
     grid-template-columns: 2fr 1fr;
     border-bottom: 1px dotted var(--gray);
-  }
 
-  .stat-value {
-    text-align: right;
-    margin-right: 0.5em;
-    color: var(--npc-dark);
-  }
+    .value {
+      text-align: right;
+      margin-right: 0.5em;
+      color: var(--npc-dark);
+    }
 
-  .stat:last-of-type {
-    border: none;
+    &:last-of-type {
+      border: none;
+    }
+
+    &.disabled {
+      opacity: 0.4;
+    }
   }
 
   .abilities {
@@ -45,9 +63,5 @@
     margin-top: -0.3em;
     font-size: 75%;
     letter-spacing: -0.02em;
-  }
-
-  .disabled {
-    opacity: 0.2;
   }
 </style>

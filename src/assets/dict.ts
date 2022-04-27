@@ -1,4 +1,4 @@
-export default {
+const dict: Dictionary = {
   en: {
     born: "b.",
     death: "Age at death",
@@ -25,14 +25,16 @@ export default {
     continue: "Continue",
     privacy: "Privacy Policy",
     usingYtCookies:
-      "We are embedding videos from Youtube, so there will be cookies. You may want to read our ",
+      "We are embedding videos from YouTube, so there will be cookies. You may want to read our ",
     reject: "Reject",
     accept: "Accept",
     goBack: "Back",
     noVideo:
-      "Sadly you can not listen to this great piece of music without accepting cookies from Youtube. Here is our ",
-    cookieCheckbox: "Accept cookies from Youtube",
+      "Sadly you can not listen to this great piece of music without accepting cookies from YouTube. Here is our ",
+    cookieCheckbox: "Accept cookies from YouTube",
     see: "See our",
+    welcome: "Welcome",
+    chooseCat: "Please choose a category to play",
   },
   de: {
     born: "geb.",
@@ -60,13 +62,17 @@ export default {
     continue: "Weiter",
     privacy: "Datenschutzerklärung",
     usingYtCookies:
-      "Wir binden Videos von Youtube ein, d.h. es werden Cookies gesetzt. Details dazu entnehmen Sie bitte unserer ",
+      "Wir binden Videos von YouTube ein, d.h. es werden Cookies gesetzt. Details dazu entnehmen Sie bitte unserer ",
     reject: "Bitte nicht",
     accept: "Akzeptieren",
     goBack: "Zurück",
     noVideo:
-      "Leider können Sie dieses großartige Werk nicht anhören, ohne Cookies von Youtube zuzulassen. Hier ist unsere ",
-    cookieCheckbox: "Cookies von Youtube akzeptieren",
+      "Leider können Sie dieses großartige Werk nicht anhören, ohne Cookies von YouTube zuzulassen. Hier ist unsere ",
+    cookieCheckbox: "Cookies von YouTube akzeptieren",
     see: "Siehe unsere",
+    welcome: "Willkommen",
+    chooseCat: "Bitte wählen Sie eine Kategorie um zu spielen",
   },
 }
+
+export { dict }

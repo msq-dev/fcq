@@ -1,16 +1,18 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte"
   import { fade } from "svelte/transition"
   import { appLanguage } from "../stores/settings.js"
   import { decks } from "../stores/game.js"
   import Card from "./Card.svelte"
 
-  export let cat
+  export let cat: string
 
-  let cardsInCat = []
+  let cardsInCat: ComposerCard[] = []
 
   onMount(() => {
-    cardsInCat = $decks[$appLanguage].filter((card) => card.index[0] === cat)
+    cardsInCat = $decks[$appLanguage].filter(
+      (card: ComposerCard) => card.index[0] === cat
+    )
   })
 </script>
 

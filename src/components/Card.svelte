@@ -1,12 +1,15 @@
-<script>
+<script lang="ts">
   import { createEventDispatcher } from "svelte"
+  import { tweened } from "svelte/motion"
+  import { cubicInOut } from "svelte/easing"
   import { sessionRunning, gameRunning, statUser } from "../stores/game.js"
   import { appLanguage, dictionary as t } from "../stores/settings.js"
+
   import CardStat from "./CardStat.svelte"
   import OverlayYoutube from "./OverlayYoutube.svelte"
   import IconSpeaker from "./IconSpeaker.svelte"
 
-  export let index = 0
+  export let index = ""
   export let category = ""
   export let name = ""
   export let nameMaiden = ""
@@ -18,15 +21,16 @@
   export let ytId = ""
   export let ytTitle = ""
   export let ytDesc = ""
-  export let stats = []
+  export let stats: Stat[] = []
+  export let isUserCard = false
+  export let isGameCard = false
+  export let isTurnComplete = false
 
-  const languageCodes = {
-    en: "en-US",
-    de: "de-DE",
-  }
+  let showYtOverlay = false
 
-  const dateOptions = { year: "numeric", month: "long", day: "numeric" }
+  const dispatch = createEventDispatcher()
 
+  const imgBaseUrl = "https://apps.maxspuling.de/assets/fcq/img/"
   const colors = [
     "darkgreen",
     "crimson",
@@ -39,17 +43,64 @@
     "fuchsia",
   ]
 
-  const imgBaseUrl = "https://apps.maxspuling.de/assets/fcq/img/"
-  const dispatch = createEventDispatcher()
+  const cardSize = tweened(1)
+  const cardTranslation = tweened(0)
 
-  $: categoryColor = colors[index[0] - 1]
+  $: categoryColor = colors[parseInt(index[0]) - 1]
+  $: src = imgBaseUrl + imageUrl
   $: birthday = formatDate(dateOfBirth)
   $: deathday = formatDate(dateOfDeath)
-  $: src = imgBaseUrl + imageUrl
 
-  let ytOverlay = false
+  $: isTurnComplete ? animateCards() : null
 
-  function playStat(s) {
+  function animateCards() {
+    let translation
+    cardSize
+      .set(0.73, {
+        duration: 1000,
+        easing: cubicInOut,
+      })
+      .then(() => {
+        translation = isUserCard ? 100 : -100
+        cardTranslation
+          .set(translation, {
+            duration: 1000,
+            easing: cubicInOut,
+          })
+          .then(() => {
+            translation = isUserCard ? -150 : 150
+            cardTranslation
+              .set(translation, { duration: 500, delay: 500 })
+              .then(() => {
+                emitAnimationEnd()
+              })
+          })
+      })
+  }
+
+  function formatDate(date: string) {
+    const languageCodes: Record<string, string> = {
+      en: "en-US",
+      de: "de-DE",
+    }
+
+    const dateOptions: Record<string, string> = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }
+
+    const day = new Date(date)
+    return day.toLocaleDateString(languageCodes[$appLanguage], dateOptions)
+  }
+
+  function emitAnimationEnd() {
+    cardSize.set(1)
+    cardTranslation.set(0)
+    dispatch("animationOver")
+  }
+
+  function playStat(s: Stat) {
     if (!$sessionRunning) return
     if ($statUser !== null) return
 
@@ -60,23 +111,23 @@
     $statUser = s
     dispatch("statPlayed")
   }
-
-  function formatDate(date) {
-    const day = new Date(date)
-    return day.toLocaleDateString(languageCodes[$appLanguage], dateOptions)
-  }
 </script>
 
 <OverlayYoutube
-  {ytOverlay}
+  active={showYtOverlay}
   {ytId}
   {ytTitle}
   {ytDesc}
   {name}
-  on:close={() => (ytOverlay = false)}
+  on:close={() => (showYtOverlay = false)}
 />
 
-<div class="playing-card rounded">
+<div
+  class="playing-card | rounded shadow"
+  class:user-card={isGameCard && isUserCard}
+  class:npc-card={isGameCard && !isUserCard}
+  style="transform: scale({$cardSize}) translate({$cardTranslation}%);"
+>
   <div class="head-container" style:color={categoryColor}>
     <div class="category">{category}</div>
     <div class="index">{index}</div>
@@ -91,7 +142,7 @@
     <div class="date birth">&ast; {birthday} in {placeOfBirth}</div>
     <div class="date death">&dagger; {deathday} in {placeOfDeath}</div>
   </div>
-  <div class="portrait-container" on:click={() => (ytOverlay = true)}>
+  <div class="portrait-container" on:click={() => (showYtOverlay = true)}>
     <img class="portrait" {src} alt={`Portait of ${name}`} />
     <img class="bg-portrait" {src} alt={`Portait of ${name}`} />
     {#if ytId}
@@ -108,13 +159,14 @@
   <div class="app-title">Female Composers Quartets</div>
 </div>
 
-<style>
+<style lang="scss">
   .playing-card {
     --size-portrait: 12rem;
 
     font-size: 90%;
     background-color: ghostwhite;
     width: calc(100% - 2rem);
+    height: 85vmax;
     padding: 0.5em 1em;
     display: flex;
     flex-direction: column;
@@ -163,24 +215,25 @@
   .portrait-container {
     position: relative;
     height: var(--size-portrait);
-  }
 
-  .portrait-container > .portrait {
-    position: absolute;
-    height: 100%;
-    object-fit: contain;
-    z-index: 5;
-    left: 50%;
-    transform: translateX(-50%);
-  }
+    > img {
+      position: absolute;
+      height: 100%;
+    }
 
-  .bg-portrait {
-    position: absolute;
-    z-index: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.5;
+    .portrait {
+      object-fit: contain;
+      z-index: 5;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .bg-portrait {
+      object-fit: cover;
+      z-index: 0;
+      width: 100%;
+      opacity: 0.5;
+    }
   }
 
   .yt-icon {
@@ -198,5 +251,22 @@
     text-align: right;
     font-size: 75%;
     color: var(--gray);
+  }
+
+  .user-card,
+  .npc-card {
+    position: absolute;
+    top: 0;
+    // transform: scale(1);
+  }
+
+  .user-card {
+    z-index: 10;
+    transform-origin: top left;
+  }
+
+  .npc-card {
+    --shadow-clr: rgb(0 0 0 / 0);
+    transform-origin: bottom right;
   }
 </style>

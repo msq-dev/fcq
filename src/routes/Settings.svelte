@@ -1,7 +1,6 @@
-<script>
+<script lang="ts">
   import { fly } from "svelte/transition"
-  import { link } from "svelte-spa-router"
-  import { pop } from "svelte-spa-router"
+  import { link, pop } from "svelte-spa-router"
   import {
     ytCookiesAccepted,
     appLanguage,

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte"
   import { fade } from "svelte/transition"
 
@@ -29,15 +29,15 @@
     "*": NotFound,
   }
 
-  function fetchData(lang) {
+  function fetchData(lang: string) {
     const DATA_URL = `https://apps.maxspuling.de/assets/fcq/data/composers_${lang}.csv`
     return csv(DATA_URL)
   }
 
-  function makePlayingCards(data) {
-    let playingCards = []
+  function makePlayingCards(data: ComposerCard[]) {
+    let playingCards: ComposerCard[] = []
     data.forEach((composer) => {
-      let stats = [
+      let stats: Stat[] = [
         {
           name: "death",
           value: parseInt(composer.ageAtDeath),
@@ -53,6 +53,12 @@
           name: "anniversary",
           value: parseInt(composer.upcomingAnniversary),
           highestWins: false,
+          anniversaryInfo: {
+            isBirth: JSON.parse(composer.anniversaryBirth.toLowerCase()),
+            anniversaryYear: parseInt(composer.upcomingAnniversary),
+            yearOfBirth: parseInt(composer.dateOfBirth.substring(0, 4)),
+            yearOfDeath: parseInt(composer.dateOfDeath.substring(0, 4)),
+          },
         },
         {
           name: "awareness",
@@ -63,7 +69,7 @@
           name: "abilities",
           value: parseInt(composer.noOfAbilities),
           highestWins: true,
-          extra: composer.musicalAbilities,
+          abilitiesInfo: composer.musicalAbilities,
         },
       ]
 
@@ -87,10 +93,10 @@
   }
 
   onMount(() => {
-    fetchData("en").then((data) => {
+    fetchData("en").then((data: ComposerCard[]) => {
       $decks.en = makePlayingCards(data)
     })
-    fetchData("de").then((data) => {
+    fetchData("de").then((data: ComposerCard[]) => {
       $decks.de = makePlayingCards(data)
     })
   })
@@ -111,7 +117,7 @@
   {/if}
 </div>
 
-<style>
+<style lang="scss">
   :global(a.active) {
     display: none;
   }
@@ -127,11 +133,11 @@
     padding: 0.5em 0;
     color: var(--npc-light);
     background-color: var(--npc-dark);
-  }
 
-  nav a {
-    font-size: 85%;
-    color: currentColor;
-    text-decoration: none;
+    a {
+      font-size: 85%;
+      color: currentColor;
+      text-decoration: none;
+    }
   }
 </style>
