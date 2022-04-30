@@ -54,7 +54,7 @@
     </div>
     <div class="yt-desc">{ytDesc}</div>
     <div class="overlay-footer">
-      <div class="btn-close | rounded" on:click={() => closeOverlay()}>
+      <div class="btn btn-close | rounded" on:click={() => closeOverlay()}>
         {$t.close}
       </div>
       <div class="app-title">Female Composers Quartets</div>
@@ -78,7 +78,7 @@
   }
 
   .name {
-    font-weight: 450;
+    font-weight: var(--fw-bold);
     font-size: 130%;
   }
 
@@ -87,7 +87,7 @@
   }
 
   .yt-title {
-    font-weight: 400;
+    font-weight: var(--fw-bold);
     font-style: italic;
   }
 
@@ -104,8 +104,6 @@
   }
 
   .btn-close {
-    --br-size: 100vw;
-
     font-size: 90%;
     background-color: var(--warning);
     padding: 0.2em 1em;

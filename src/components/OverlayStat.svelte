@@ -3,12 +3,10 @@
 
   export let cardName: string
   export let stat: Stat
-  export let isUser = false
-
-  let playerClass = isUser ? "user" : "npc"
+  export let winner: boolean
 </script>
 
-<div class={`${playerClass} | overlay-stat | flex-col`}>
+<div class="overlay-stat | flex-col" class:winner>
   <div class="bold">
     {cardName}
   </div>
@@ -23,11 +21,7 @@
     margin-bottom: 0.5em;
   }
 
-  .user {
-    color: var(--user-light);
-  }
-
-  .npc {
-    color: var(--npc-light);
+  .winner {
+    color: gold;
   }
 </style>

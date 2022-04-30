@@ -6,7 +6,7 @@
 </script>
 
 <main
-  class="privacy | flex-col"
+  class="container flex-col"
   in:fade={{ duration: 100, delay: 200 }}
   out:fade={{ duration: 100, delay: 0 }}
 >
@@ -413,10 +413,6 @@
 
     padding: 1em 0;
     margin-bottom: 20vh;
-  }
-
-  .privacy > :is(h1, h2, h3, h4) {
-    font-weight: 500;
   }
 
   h1 {

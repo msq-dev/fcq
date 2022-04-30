@@ -114,11 +114,13 @@ h6 {
   --link: #1790d1;
   --warning: #d12b37;
   --success: #018522;
+  --fw-normal: 300;
+  --fw-bold: 450;
 }
 
 body {
   font-family: "Rubik", sans-serif;
-  font-weight: 300;
+  font-weight: var(--fw-normal);
   background-color: #b0c3cb;
 }
 
@@ -136,9 +138,16 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-main {
-  display: flex;
-  flex-direction: column;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: var(--fw-bold);
+}
+
+.container {
   width: min(100% - 2rem, 65ch);
   margin: 0 auto;
 }
@@ -160,7 +169,7 @@ main {
 }
 
 .bold {
-  font-weight: 500;
+  font-weight: var(--fw-bold);
 }
 
 .upper {
@@ -199,10 +208,12 @@ main {
 }
 
 .btn {
+  --br-size: 100vw;
+
   background-color: var(--bg-color, var(--npc-light));
   color: currentColor;
   width: fit-content;
-  padding: 0.2em 0.5em;
+  padding: 0.2em 1em;
 }
 
 .button-group {
@@ -213,10 +224,12 @@ main {
 
 .btn-reject {
   --bg-color: var(--warning);
+  color: #fff;
 }
 
 .btn-accept {
   --bg-color: var(--success);
+  color: #fff;
 }
 
 .cookie-banner {
@@ -226,8 +239,14 @@ main {
   width: 100%;
 }
 
-.cookie-banner .btn {
-  --br-size: 100vw;
-  color: #fff;
-  padding: 0.2em 1em;
+.nav-button::before {
+  content: "\2192";
+  margin-right: 0.3em;
+}
+
+.nav-button {
+  text-decoration: none;
+  padding: 0.15em 0.75em 0.25em 0.5em;
+  border-radius: 0.2em;
+  color: inherit;
 }

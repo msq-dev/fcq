@@ -140,8 +140,7 @@
 
   onMount(() => {
     setupGame()
-    userBegins = true
-    // userBegins = Math.round(Math.random()) ? true : false
+    userBegins = Math.round(Math.random()) ? true : false
   })
 
   onDestroy(() => {
@@ -150,7 +149,11 @@
 </script>
 
 {#if $sessionRunning}
-  <main transition:fade={{ duration: 100, delay: 100 }}>
+  <main
+    class="container"
+    in:fade={{ duration: 100, delay: 200 }}
+    out:fade={{ duration: 100, delay: 0 }}
+  >
     <Overlay
       active={showEvaluation}
       btnText={$t.continue}
@@ -164,8 +167,16 @@
         {/if}
       </span>
       <span slot="body">
-        <OverlayStat cardName={$currentCardNpc.name} stat={$statNpc} />
-        <OverlayStat cardName={$currentCardUser.name} stat={$statUser} isUser />
+        <OverlayStat
+          cardName={$currentCardNpc.name}
+          stat={$statNpc}
+          winner={!userWins}
+        />
+        <OverlayStat
+          cardName={$currentCardUser.name}
+          stat={$statUser}
+          winner={userWins}
+        />
       </span>
     </Overlay>
 
@@ -196,13 +207,6 @@
           >Computer: {$deckNpc.length}
           {$t.card}{$deckNpc.length > 1 ? $t.cardPlural : ""}</span
         >
-
-        <!-- {#if $statNpc !== null}
-          | <span class="stat-played"
-            >{$t[$statNpc.name]}: {$statNpc.symbol || ""} {$statNpc.value}</span
-          >
-        {/if} -->
-
         <span class="float-right"
           >User: {$deckUser.length}
           {$t.card}{$deckUser.length > 1 ? $t.cardPlural : ""}</span
@@ -218,7 +222,7 @@
           isUserCard
           {isTurnComplete}
           on:statPlayed={() => moveUser()}
-          on:animationOver={() => (showEvaluation = true)}
+          on:animationEnd={() => (showEvaluation = true)}
         />
         <Card {...$currentCardNpc} isGameCard {isTurnComplete} />
       {/if}
@@ -231,10 +235,6 @@
     font-size: 65%;
     margin: 0.5em 0;
   }
-
-  /* .stat-played {
-    font-weight: 500;
-  } */
 
   .npc-start {
     margin-top: 15vh;

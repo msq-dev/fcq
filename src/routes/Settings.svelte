@@ -8,7 +8,11 @@
   } from "../stores/settings.js"
 </script>
 
-<main in:fly={{ y: 500, delay: 200 }} out:fly={{ y: 500, duration: 100 }}>
+<main
+  class="container | flex-col"
+  in:fly={{ y: 500, delay: 200 }}
+  out:fly={{ y: 500, duration: 100 }}
+>
   <h1>{$t.settings}</h1>
   <div class="settings">
     <h2>{$t.language}</h2>
@@ -44,16 +48,15 @@
 
   h1 {
     margin-top: 5vh;
-    font-weight: 500;
-    margin-bottom: 0.3em;
+    align-self: flex-start;
   }
 
   .settings {
     min-height: 50vh;
+    align-self: flex-start;
   }
 
   h2 {
-    font-weight: 400;
     padding-bottom: 0.2em;
     margin: 0.5em 0;
     border-bottom: 1px dotted var(--npc-dark);
@@ -69,7 +72,6 @@
   }
 
   .btn-close {
-    --br-size: 100vw;
     width: fit-content;
     padding: 0.3em 1em;
     margin: 3em auto 0 auto;

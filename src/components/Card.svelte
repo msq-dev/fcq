@@ -1,9 +1,10 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte"
+  import { fade } from "svelte/transition"
   import { tweened } from "svelte/motion"
   import { cubicInOut } from "svelte/easing"
   import { sessionRunning, gameRunning, statUser } from "../stores/game.js"
-  import { appLanguage, dictionary as t } from "../stores/settings.js"
+  import { dictionary as t } from "../stores/settings.js"
 
   import CardStat from "./CardStat.svelte"
   import OverlayYoutube from "./OverlayYoutube.svelte"
@@ -22,6 +23,7 @@
   export let ytTitle = ""
   export let ytDesc = ""
   export let stats: Stat[] = []
+  export let shadow = true
   export let isUserCard = false
   export let isGameCard = false
   export let isTurnComplete = false
@@ -57,20 +59,20 @@
     let translation
     cardSize
       .set(0.73, {
-        duration: 1000,
+        duration: 500,
         easing: cubicInOut,
       })
       .then(() => {
         translation = isUserCard ? 100 : -100
         cardTranslation
           .set(translation, {
-            duration: 1000,
+            duration: 300,
             easing: cubicInOut,
           })
           .then(() => {
-            translation = isUserCard ? -150 : 150
+            translation = isUserCard ? -250 : 250
             cardTranslation
-              .set(translation, { duration: 500, delay: 500 })
+              .set(translation, { duration: 300, delay: 100 })
               .then(() => {
                 emitAnimationEnd()
               })
@@ -79,30 +81,27 @@
   }
 
   function formatDate(date: string) {
-    const languageCodes: Record<string, string> = {
-      en: "en-US",
-      de: "de-DE",
-    }
-
-    const dateOptions: Record<string, string> = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }
-
     const day = new Date(date)
-    return day.toLocaleDateString(languageCodes[$appLanguage], dateOptions)
+    const onlyYear = day.getDate() === 31 && day.getMonth() === 11
+    const dateOptions: any = {
+      year: "numeric",
+      month: onlyYear ? undefined : "long",
+      day: onlyYear ? undefined : "numeric",
+    }
+    return day.toLocaleDateString($t.languageCode, dateOptions)
   }
 
   function emitAnimationEnd() {
-    cardSize.set(1)
-    cardTranslation.set(0)
-    dispatch("animationOver")
+    dispatch("animationEnd")
+  }
+
+  function resetTweens() {
+    cardTranslation.set(0, { duration: 0 })
+    cardSize.set(1, { duration: 0 })
   }
 
   function playStat(s: Stat) {
-    if (!$sessionRunning) return
-    if ($statUser !== null) return
+    if (!$sessionRunning || $statUser !== null) return
 
     if (!$gameRunning) {
       $gameRunning = true
@@ -122,55 +121,64 @@
   on:close={() => (showYtOverlay = false)}
 />
 
-<div
-  class="playing-card | rounded shadow"
-  class:user-card={isGameCard && isUserCard}
-  class:npc-card={isGameCard && !isUserCard}
-  style="transform: scale({$cardSize}) translate({$cardTranslation}%);"
->
-  <div class="head-container" style:color={categoryColor}>
-    <div class="category">{category}</div>
-    <div class="index">{index}</div>
+{#key index}
+  <div
+    id={index}
+    class="playing-card | rounded"
+    class:shadow
+    class:user-card={isGameCard && isUserCard}
+    class:npc-card={isGameCard && !isUserCard}
+    style="transform: scale({$cardSize}) translate({$cardTranslation}%);"
+    in:fade={{ duration: 100 }}
+    on:introstart={() => resetTweens()}
+  >
+    <div class="head-container" style:color={categoryColor}>
+      <div class="category">{category}</div>
+      <div class="index">{index}</div>
+    </div>
+    <div class="names-container">
+      <div class="name">{name}</div>
+      {#if nameMaiden}
+        <div class="maiden-name">({$t.born} {nameMaiden})</div>
+      {/if}
+    </div>
+    <div class="life-container">
+      <div class="date birth">&ast; {birthday} in {placeOfBirth}</div>
+      <div class="date death">&dagger; {deathday} in {placeOfDeath}</div>
+    </div>
+    <div class="portrait-container" on:click={() => (showYtOverlay = true)}>
+      <img class="portrait" {src} alt={`Portait of ${name}`} />
+      <img class="bg-portrait" {src} alt={`Portait of ${name}`} />
+      {#if ytId}
+        <div class="yt-icon">
+          <IconSpeaker size={30} />
+        </div>
+      {/if}
+    </div>
+    <div class="stats-table">
+      {#each stats as stat}
+        <CardStat {stat} on:statClicked={() => playStat(stat)} />
+      {/each}
+    </div>
+    <div class="app-title">Female Composers Quartets</div>
   </div>
-  <div class="names-container">
-    <div class="name">{name}</div>
-    {#if nameMaiden}
-      <div class="maiden-name">({$t.born} {nameMaiden})</div>
-    {/if}
-  </div>
-  <div class="life-container">
-    <div class="date birth">&ast; {birthday} in {placeOfBirth}</div>
-    <div class="date death">&dagger; {deathday} in {placeOfDeath}</div>
-  </div>
-  <div class="portrait-container" on:click={() => (showYtOverlay = true)}>
-    <img class="portrait" {src} alt={`Portait of ${name}`} />
-    <img class="bg-portrait" {src} alt={`Portait of ${name}`} />
-    {#if ytId}
-      <div class="yt-icon">
-        <IconSpeaker size={30} />
-      </div>
-    {/if}
-  </div>
-  <div class="stats-table">
-    {#each stats as stat}
-      <CardStat {stat} on:statClicked={() => playStat(stat)} />
-    {/each}
-  </div>
-  <div class="app-title">Female Composers Quartets</div>
-</div>
+{/key}
 
 <style lang="scss">
   .playing-card {
     --size-portrait: 12rem;
 
+    position: relative;
     font-size: 90%;
     background-color: ghostwhite;
     width: calc(100% - 2rem);
-    height: 85vmax;
+    height: 30rem;
+    min-width: 80vw;
     padding: 0.5em 1em;
     display: flex;
     flex-direction: column;
     margin-bottom: 1em;
+    scroll-snap-align: start;
   }
 
   .head-container {
@@ -199,7 +207,7 @@
   }
 
   .name {
-    font-weight: 450;
+    font-weight: var(--fw-bold);
     font-size: 130%;
   }
 
@@ -247,8 +255,9 @@
   }
 
   .app-title {
-    margin-top: 0.6em;
-    text-align: right;
+    position: absolute;
+    bottom: 0.75em;
+    right: 1em;
     font-size: 75%;
     color: var(--gray);
   }
@@ -257,7 +266,6 @@
   .npc-card {
     position: absolute;
     top: 0;
-    // transform: scale(1);
   }
 
   .user-card {

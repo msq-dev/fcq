@@ -6,6 +6,7 @@
   export let stat: Stat
 
   $: disabled = $statNpc !== null && $t[$statNpc.name] !== $t[stat.name]
+  $: selected = $statNpc !== null && $t[$statNpc.name] === $t[stat.name]
   $: anniversaryInfo = stat.anniversaryInfo
     ? calculateAnniversary(stat.anniversaryInfo)
     : ""
@@ -28,8 +29,8 @@
 </script>
 
 <div class="stat" class:disabled on:click={() => statClicked()}>
-  <span class="name">{$t[stat.name]}</span>
-  <span class="value"
+  <span class="name" class:selected>{$t[stat.name]}</span>
+  <span class="value" class:selected
     >{stat.symbol || ""} {stat.value}{@html anniversaryInfo}</span
   >
   {#if stat.abilitiesInfo}
@@ -55,6 +56,16 @@
 
     &.disabled {
       opacity: 0.4;
+    }
+  }
+
+  .selected {
+    animation: pulse 1s alternate infinite;
+  }
+
+  @keyframes pulse {
+    to {
+      font-weight: 420;
     }
   }
 

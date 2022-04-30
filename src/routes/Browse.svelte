@@ -3,8 +3,8 @@
   import { fade } from "svelte/transition"
   import { appLanguage, dictionary as t } from "../stores/settings.js"
   import { decks } from "../stores/game.js"
-  import CategoryButton from "../components/CategoryButton.svelte"
-  import CategoryDetail from "../components/CategoryDetail.svelte"
+  import ButtonCategory from "../components/ButtonCategory.svelte"
+  import PageCategory from "../components/PageCategory.svelte"
 
   export let params: Record<string, string> = {}
 
@@ -27,6 +27,7 @@
 </script>
 
 <main
+  class="grid-container"
   in:fade={{ duration: 100, delay: 200 }}
   out:fade={{ duration: 100, delay: 0 }}
 >
@@ -34,11 +35,11 @@
     <h1>{$t.categories}</h1>
     <div class="category-grid">
       {#each categories as cat}
-        <CategoryButton {...cat} />
+        <ButtonCategory {...cat} />
       {/each}
     </div>
   {:else}
-    <CategoryDetail cat={params.cat} />
+    <PageCategory cat={params.cat} />
   {/if}
 </main>
 
@@ -46,6 +47,16 @@
   main {
     padding: 1em 0;
     margin-bottom: 20vh;
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: 1fr min(100% - 2rem, 65ch) 1fr;
+    position: relative;
+  }
+
+  .grid-container > * {
+    grid-column: 2;
   }
 
   h1 {

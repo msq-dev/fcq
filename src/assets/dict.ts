@@ -1,5 +1,6 @@
 const dict: Dictionary = {
   en: {
+    languageCode: "en-US",
     born: "b.",
     death: "Age at death",
     works: "Number of works",
@@ -19,9 +20,9 @@ const dict: Dictionary = {
     card: "card",
     cardPlural: "s",
     statPlayed: "played",
-    draw: "Draw!",
-    youWin: "You win :)",
-    youLose: "You lose :(",
+    draw: "It's a draw!",
+    youWin: "You win",
+    youLose: "You lose",
     continue: "Continue",
     privacy: "Privacy Policy",
     usingYtCookies:
@@ -35,8 +36,10 @@ const dict: Dictionary = {
     see: "See our",
     welcome: "Welcome",
     chooseCat: "Please choose a category to play",
+    jumpTo: "Jump to",
   },
   de: {
+    languageCode: "de-DE",
     born: "geb.",
     death: "Lebensjahre",
     works: "Anzahl der Werke",
@@ -57,8 +60,8 @@ const dict: Dictionary = {
     cardPlural: "n",
     statPlayed: "gespielt",
     draw: "Stich!",
-    youWin: "Gewonnen :)",
-    youLose: "Verloren :(",
+    youWin: "Gewonnen",
+    youLose: "Verloren",
     continue: "Weiter",
     privacy: "Datenschutzerklärung",
     usingYtCookies:
@@ -72,6 +75,7 @@ const dict: Dictionary = {
     see: "Siehe unsere",
     welcome: "Willkommen",
     chooseCat: "Bitte wählen Sie eine Kategorie um zu spielen",
+    jumpTo: "Springe zu",
   },
 }
 
