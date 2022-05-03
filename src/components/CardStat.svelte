@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte"
-  import { statNpc, sessionRunning } from "../stores/game.js"
-  import { dictionary as t } from "../stores/settings.js"
+  import { statNpc, sessionRunning } from "../stores/game"
+  import { dictionary as t } from "../stores/settings"
 
   export let stat: Stat
 
@@ -24,17 +24,21 @@
       ? "&ast;&thinsp;" + String(upcomingYear - a.yearOfBirth)
       : "&dagger;&thinsp;" + String(upcomingYear - a.yearOfDeath)
 
-    return `<span style="font-size: 75%; margin-left: 0.5em;">(${anniversary})</span>`
+    return `<span class="small" style="margin-left: 0.5em;">(${anniversary})</span>`
   }
 </script>
 
 <div class="stat" class:disabled on:click={() => statClicked()}>
-  <span class="name" class:selected>{$t[stat.name]}</span>
-  <span class="value" class:selected
+  {#if stat.isAlive === true}
+    <span class="name" class:selected>{$t.currentAge}</span>
+  {:else}
+    <span class="name" class:selected>{$t[stat.name]}</span>
+  {/if}
+  <span class="value"
     >{stat.symbol || ""} {stat.value}{@html anniversaryInfo}</span
   >
   {#if stat.abilitiesInfo}
-    <span class="abilities">{stat.abilitiesInfo}</span>
+    <span class="abilities | small">{stat.abilitiesInfo}</span>
   {/if}
 </div>
 
@@ -72,7 +76,6 @@
   .abilities {
     grid-column: span 2;
     margin-top: -0.3em;
-    font-size: 75%;
     letter-spacing: -0.02em;
   }
 </style>

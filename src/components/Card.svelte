@@ -1,13 +1,19 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte"
+  import { createEventDispatcher, onMount } from "svelte"
   import { fade } from "svelte/transition"
   import { tweened } from "svelte/motion"
   import { cubicInOut } from "svelte/easing"
-  import { sessionRunning, gameRunning, statUser } from "../stores/game.js"
-  import { dictionary as t } from "../stores/settings.js"
+  import { sessionRunning, gameRunning, statUser } from "../stores/game"
+  import { dictionary as t } from "../stores/settings"
+  import {
+    showOverlay,
+    videoId,
+    videoTitle,
+    videoDesc,
+    composerName,
+  } from "../stores/youtube"
 
   import CardStat from "./CardStat.svelte"
-  import OverlayYoutube from "./OverlayYoutube.svelte"
   import IconSpeaker from "./IconSpeaker.svelte"
 
   export let index = ""
@@ -18,21 +24,21 @@
   export let dateOfDeath = ""
   export let placeOfBirth = ""
   export let placeOfDeath = ""
-  export let imageUrl = "Placeholder.jpg"
+  export let imageUrl = ""
+  export let stats: Stat[] = []
+
   export let ytId = ""
   export let ytTitle = ""
   export let ytDesc = ""
-  export let stats: Stat[] = []
+
   export let shadow = true
   export let isUserCard = false
   export let isGameCard = false
   export let isTurnComplete = false
 
-  let showYtOverlay = false
-
   const dispatch = createEventDispatcher()
 
-  const imgBaseUrl = "https://apps.maxspuling.de/assets/fcq/img/"
+  const IMG_BASE_URL = "https://apps.maxspuling.de/assets/fcq/img/"
   const colors = [
     "darkgreen",
     "crimson",
@@ -46,36 +52,45 @@
   ]
 
   const cardSize = tweened(1)
-  const cardTranslation = tweened(0)
+  const cardTranslationX = tweened(0)
+  const cardTranslationY = tweened(0)
+
+  let imgExists = false
+  let switchClass = false
 
   $: categoryColor = colors[parseInt(index[0]) - 1]
-  $: src = imgBaseUrl + imageUrl
   $: birthday = formatDate(dateOfBirth)
   $: deathday = formatDate(dateOfDeath)
-
   $: isTurnComplete ? animateCards() : null
+
+  $: userClass = isGameCard && isUserCard
+  $: npcClass = isGameCard && !isUserCard
+
+  $: srcUrl = /^https?/.test(imageUrl) ? imageUrl : IMG_BASE_URL + imageUrl
+  $: src = imgExists ? srcUrl : IMG_BASE_URL + "Placeholder.png"
 
   function animateCards() {
     let translation
+    const shmoov = {
+      duration: 1000,
+      easing: cubicInOut,
+    }
     cardSize
       .set(0.73, {
         duration: 500,
-        easing: cubicInOut,
       })
       .then(() => {
-        translation = isUserCard ? 100 : -100
-        cardTranslation
-          .set(translation, {
-            duration: 300,
-            easing: cubicInOut,
+        translation = isUserCard ? -100 : 100
+        cardTranslationX
+          .set(translation, shmoov)
+          .then(() => {
+            translation = isUserCard ? 37 : -37
+            switchClass = !switchClass
+            cardTranslationX.set(translation, shmoov)
+            cardTranslationY.set(translation, shmoov)
           })
           .then(() => {
-            translation = isUserCard ? -250 : 250
-            cardTranslation
-              .set(translation, { duration: 300, delay: 100 })
-              .then(() => {
-                emitAnimationEnd()
-              })
+            emitAnimationEnd()
           })
       })
   }
@@ -92,12 +107,16 @@
   }
 
   function emitAnimationEnd() {
-    dispatch("animationEnd")
+    setTimeout(() => {
+      dispatch("animationEnd")
+    }, 1500)
   }
 
   function resetTweens() {
-    cardTranslation.set(0, { duration: 0 })
+    cardTranslationX.set(0, { duration: 0 })
+    cardTranslationY.set(0, { duration: 0 })
     cardSize.set(1, { duration: 0 })
+    switchClass = false
   }
 
   function playStat(s: Stat) {
@@ -110,45 +129,93 @@
     $statUser = s
     dispatch("statPlayed")
   }
-</script>
 
-<OverlayYoutube
-  active={showYtOverlay}
-  {ytId}
-  {ytTitle}
-  {ytDesc}
-  {name}
-  on:close={() => (showYtOverlay = false)}
-/>
+  function showYoutubeOverlay() {
+    $showOverlay = true
+    $videoId = ytId
+    $videoTitle = ytTitle
+    $videoDesc = ytDesc
+    $composerName = name
+  }
+
+  function checkIfImageExists(url: string, callback: Function) {
+    const img = new Image()
+    img.src = url
+
+    if (img.complete) {
+      callback(true)
+    } else {
+      img.onload = () => {
+        callback(true)
+      }
+      img.onerror = () => {
+        callback(false)
+      }
+    }
+  }
+
+  onMount(() => {
+    checkIfImageExists(srcUrl, (exists: boolean) => {
+      if (exists) {
+        imgExists = true
+      } else {
+        imgExists = false
+      }
+    })
+  })
+</script>
 
 {#key index}
   <div
     id={index}
     class="playing-card | rounded"
     class:shadow
-    class:user-card={isGameCard && isUserCard}
-    class:npc-card={isGameCard && !isUserCard}
-    style="transform: scale({$cardSize}) translate({$cardTranslation}%);"
+    class:user-card={userClass}
+    class:npc-card={npcClass}
+    style="transform: scale({$cardSize}) translateX({$cardTranslationX}%) translateY({$cardTranslationY}%); z-index: {(userClass &&
+      !switchClass) ||
+    (npcClass && switchClass)
+      ? 5
+      : -5}; --shadow-clr: {(userClass && !switchClass) ||
+    (npcClass && switchClass)
+      ? 'rgb(0 0 0 / 0.25)'
+      : 'rgb(0 0 0 / 0)'};"
     in:fade={{ duration: 100 }}
     on:introstart={() => resetTweens()}
   >
     <div class="head-container" style:color={categoryColor}>
-      <div class="category">{category}</div>
-      <div class="index">{index}</div>
+      <div class="category | small">{category}</div>
+      <div class="index | small">{index}</div>
     </div>
     <div class="names-container">
-      <div class="name">{name}</div>
+      <div class="name | fit-text" style="--text-length: {name.length};">
+        {name}
+      </div>
       {#if nameMaiden}
-        <div class="maiden-name">({$t.born} {nameMaiden})</div>
+        <div class="maiden-name | small">({$t.born} {nameMaiden})</div>
       {/if}
     </div>
     <div class="life-container">
-      <div class="date birth">&ast; {birthday} in {placeOfBirth}</div>
-      <div class="date death">&dagger; {deathday} in {placeOfDeath}</div>
+      <div class="date birth">
+        {#if birthday.length === 4}
+          <sup>(&lowast;)</sup>
+        {:else}
+          <sup>&lowast;</sup>
+        {/if}
+        {birthday} in {placeOfBirth}
+      </div>
+      {#if dateOfDeath}
+        <div class="date death">&dagger; {deathday} in {placeOfDeath}</div>
+      {/if}
     </div>
-    <div class="portrait-container" on:click={() => (showYtOverlay = true)}>
-      <img class="portrait" {src} alt={`Portait of ${name}`} />
-      <img class="bg-portrait" {src} alt={`Portait of ${name}`} />
+    <div class="portrait-container" on:click={() => showYoutubeOverlay()}>
+      <img loading="lazy" class="portrait" {src} alt={$t.portraitOf + name} />
+      <img
+        loading="lazy"
+        class="bg-portrait"
+        {src}
+        alt={$t.portraitOf + name}
+      />
       {#if ytId}
         <div class="yt-icon">
           <IconSpeaker size={30} />
@@ -160,7 +227,7 @@
         <CardStat {stat} on:statClicked={() => playStat(stat)} />
       {/each}
     </div>
-    <div class="app-title">Female Composers Quartets</div>
+    <div class="app-title | small">Female Composers Quartets</div>
   </div>
 {/key}
 
@@ -185,11 +252,6 @@
     color: #666;
   }
 
-  .head-container,
-  .maiden-name {
-    font-size: 75%;
-  }
-
   .category,
   .index,
   .name {
@@ -207,15 +269,14 @@
   }
 
   .name {
+    --scale: 18.5;
     font-weight: var(--fw-bold);
-    font-size: 130%;
   }
 
   .maiden-name {
     display: block;
   }
 
-  .life-container,
   .portrait-container {
     margin-top: 0.25em;
   }
@@ -258,7 +319,6 @@
     position: absolute;
     bottom: 0.75em;
     right: 1em;
-    font-size: 75%;
     color: var(--gray);
   }
 
@@ -269,12 +329,10 @@
   }
 
   .user-card {
-    z-index: 10;
     transform-origin: top left;
   }
 
   .npc-card {
-    --shadow-clr: rgb(0 0 0 / 0);
     transform-origin: bottom right;
   }
 </style>

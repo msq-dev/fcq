@@ -8,8 +8,9 @@
 
   import { csv } from "d3-fetch"
 
-  import { dictionary as t } from "./stores/settings.js"
-  import { decks } from "./stores/game.js"
+  import { dictionary as t } from "./stores/settings"
+  import { decks } from "./stores/game"
+  import { showOverlay } from "./stores/youtube"
 
   import Home from "./routes/Home.svelte"
   import Game from "./routes/Game.svelte"
@@ -18,6 +19,7 @@
   import Privacy from "./routes/Privacy.svelte"
   import NotFound from "./routes/NotFound.svelte"
 
+  import OverlayYoutube from "./components/OverlayYoutube.svelte"
   import IconSettings from "./components/IconSettings.svelte"
 
   const routes = {
@@ -27,6 +29,18 @@
     "/settings": Settings,
     "/privacy": Privacy,
     "*": NotFound,
+  }
+
+  // courtesy of https://stackoverflow.com/a/21984136
+  function calculateAge(birthday: string, deathday: string) {
+    const dateOfBirth = new Date(birthday)
+    const dateToSubstractFrom: any = deathday
+      ? new Date(deathday).getTime()
+      : Date.now()
+    const ageDifference = dateToSubstractFrom - dateOfBirth.getTime()
+    const ageDate = new Date(ageDifference)
+
+    return Math.abs(ageDate.getUTCFullYear() - 1970)
   }
 
   function fetchData(lang: string) {
@@ -39,9 +53,10 @@
     data.forEach((composer) => {
       let stats: Stat[] = [
         {
-          name: "death",
-          value: parseInt(composer.ageAtDeath),
+          name: "age",
+          value: calculateAge(composer.dateOfBirth, composer.dateOfDeath),
           highestWins: true,
+          isAlive: composer.dateOfDeath ? false : true,
         },
         {
           name: "works",
@@ -67,7 +82,7 @@
         },
         {
           name: "abilities",
-          value: parseInt(composer.noOfAbilities),
+          value: composer.musicalAbilities.split(",").length,
           highestWins: true,
           abilitiesInfo: composer.musicalAbilities,
         },
@@ -79,11 +94,11 @@
         category: composer.category,
         name: composer.name,
         nameMaiden: composer.nameMaiden,
-        imageUrl: composer.imageUrl,
+        imageUrl: composer.imageUrl || "Placeholder.png",
         dateOfBirth: composer.dateOfBirth,
         placeOfBirth: composer.placeOfBirth,
-        dateOfDeath: composer.dateOfDeath,
-        placeOfDeath: composer.placeOfDeath,
+        dateOfDeath: composer.dateOfDeath || null,
+        placeOfDeath: composer.placeOfDeath || null,
         ytTitle: composer.ytTitle,
         ytDesc: composer.ytDesc,
         ytId: composer.ytId,
@@ -104,6 +119,10 @@
 
 <div class="mainwrapper">
   <Router {routes} restoreScrollState={true} />
+
+  {#if $showOverlay}
+    <OverlayYoutube />
+  {/if}
 
   {#if $location !== "/" && $location !== "/settings"}
     <nav class="shadow" transition:fade={{ duration: 100 }}>

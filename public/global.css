@@ -147,8 +147,12 @@ h6 {
   font-weight: var(--fw-bold);
 }
 
+a.btn {
+  text-decoration: none;
+}
+
 .container {
-  width: min(100% - 2rem, 65ch);
+  width: min(100% - 2rem, var(--max-width, 65ch));
   margin: 0 auto;
 }
 
@@ -172,8 +176,16 @@ h6 {
   font-weight: var(--fw-bold);
 }
 
+.small {
+  font-size: 75%;
+}
+
 .upper {
   text-transform: uppercase;
+}
+
+.text-center {
+  text-align: center;
 }
 
 .flex-col {
@@ -192,8 +204,13 @@ h6 {
   inset: auto auto 0 auto;
 }
 
-.text-center {
-  text-align: center;
+.fit-text {
+  font-size: min(
+    calc(
+      var(--width, 100%) / (var(--text-length, 1) * 0.5) * var(--scale, 7.5)
+    ),
+    130%
+  );
 }
 
 /* Blocks */

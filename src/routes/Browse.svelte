@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte"
   import { fade } from "svelte/transition"
-  import { appLanguage, dictionary as t } from "../stores/settings.js"
-  import { decks } from "../stores/game.js"
+  import { appLanguage, dictionary as t } from "../stores/settings"
+  import { decks } from "../stores/game"
   import ButtonCategory from "../components/ButtonCategory.svelte"
   import PageCategory from "../components/PageCategory.svelte"
 
@@ -52,7 +52,6 @@
   .grid-container {
     display: grid;
     grid-template-columns: 1fr min(100% - 2rem, 65ch) 1fr;
-    position: relative;
   }
 
   .grid-container > * {

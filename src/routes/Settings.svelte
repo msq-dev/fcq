@@ -5,7 +5,7 @@
     ytCookiesAccepted,
     appLanguage,
     dictionary as t,
-  } from "../stores/settings.js"
+  } from "../stores/settings"
 </script>
 
 <main
@@ -36,7 +36,7 @@
     </div>
   </div>
 
-  <button class="btn-close | rounded" on:click={() => pop()}
+  <button class="btn btn-close | rounded" on:click={() => pop()}
     >{$t.saveAndClose}</button
   >
 </main>

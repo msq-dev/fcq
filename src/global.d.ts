@@ -29,6 +29,7 @@ interface Stat {
   name: string
   value: number
   highestWins: boolean
+  isAlive?: boolean
   symbol?: string
   abilitiesInfo?: string
   anniversaryInfo?: AnniversaryInfo

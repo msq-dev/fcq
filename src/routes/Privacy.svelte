@@ -2,7 +2,7 @@
   import { fade } from "svelte/transition"
   import { pop } from "svelte-spa-router"
 
-  import { appLanguage, dictionary as t } from "../stores/settings.js"
+  import { appLanguage, dictionary as t } from "../stores/settings"
 </script>
 
 <main

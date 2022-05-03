@@ -1,5 +1,5 @@
 import { writable, derived, Writable } from "svelte/store"
-import { dict } from "../assets/dict.js"
+import { dict } from "../assets/dict"
 
 // const storedCookiePreference = JSON.parse(localStorage.acceptCookies)
 // export const ytCookiesAccepted = writable(storedCookiePreference || null)

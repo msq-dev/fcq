@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { dictionary as t } from "../stores/settings.js"
+  import { dictionary as t } from "../stores/settings"
 
   export let cardName: string
   export let stat: Stat
@@ -10,10 +10,18 @@
   <div class="bold">
     {cardName}
   </div>
-  <div>
-    {$t[stat.name]}:
-    <span class="bold">{stat.symbol || ""} {stat.value}</span>
-  </div>
+
+  {#if stat.isAlive}
+    <div>
+      {$t.currentAge}:
+      <span><span class="bold">{stat.value}</span> {$t.andCounting}</span>
+    </div>
+  {:else}
+    <div>
+      {$t[stat.name]}:
+      <span class="bold">{stat.symbol || ""} {stat.value}</span>
+    </div>
+  {/if}
 </div>
 
 <style>

@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte"
+  import { onMount } from "svelte"
   import { fade } from "svelte/transition"
-  import { appLanguage, dictionary as t } from "../stores/settings.js"
+  import { appLanguage, dictionary as t } from "../stores/settings"
   import {
+    game,
     decks,
     sessionRunning,
     gameRunning,
@@ -13,22 +14,33 @@
     statUser,
     statNpc,
     resetGame,
-  } from "../stores/game.js"
+  } from "../stores/game"
   import Card from "../components/Card.svelte"
   import Overlay from "../components/Overlay.svelte"
   import OverlayStat from "../components/OverlayStat.svelte"
+  import OverlayGameOver from "../components/OverlayGameOver.svelte"
 
+  // const cardsPerPlayer = 1
   const cardsPerPlayer = $decks[$appLanguage].length / 2
-
-  $: isTurnComplete = $statUser !== null && $statNpc !== null
 
   let deck = []
   let cardsPlayed: ComposerCard[] = []
   let showEvaluation: boolean
   let userBegins: boolean
   let userWins: boolean
+  let userWinsGame: boolean
+  let setupReady: Promise<boolean>
+
+  $: isTurnComplete = $statUser !== null && $statNpc !== null
+  $: isGameOver = userWinsGame !== null
+
+  async function getGameReadyState() {
+    return await game.setup()
+  }
 
   function setupGame() {
+    resetGame()
+
     deck = shuffle(Array.from($decks[$appLanguage]))
     cardsPlayed = []
 
@@ -37,10 +49,15 @@
     }
 
     $deckNpc = deck
+    // $deckNpc = [...$deckNpc, deck.pop()]
+
     userBegins = null
     userWins = null
+    userWinsGame = null
 
     $sessionRunning = true
+    setupReady = getGameReadyState()
+    userBegins = Math.round(Math.random()) ? true : false
   }
 
   function startTurn() {
@@ -74,6 +91,14 @@
   }
 
   function evaluateTurn() {
+    if ($statUser.isAlive && !$statNpc.isAlive) {
+      userWins = true
+      return
+    } else if (!$statUser.isAlive && $statNpc.isAlive) {
+      userWins = false
+      return
+    }
+
     if ($statUser.value === $statNpc.value) return
 
     if (
@@ -110,6 +135,11 @@
     $deckUser = [...$deckUser.slice(1, $deckUser.length)]
     $deckNpc = [...$deckNpc.slice(1, $deckNpc.length)]
 
+    if (!$deckUser.length || !$deckNpc.length) {
+      handleGameOver()
+      return
+    }
+
     $statUser = null
     $statNpc = null
 
@@ -129,6 +159,15 @@
     endTurn()
   }
 
+  function handleGameOver() {
+    userWinsGame = $deckUser.length ? true : false
+    $gameRunning = false
+  }
+
+  function handleReset() {
+    setupGame()
+  }
+
   // courtesy of https://stackoverflow.com/a/12646864
   function shuffle(array: ComposerCard[]) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -140,20 +179,28 @@
 
   onMount(() => {
     setupGame()
-    userBegins = Math.round(Math.random()) ? true : false
-  })
-
-  onDestroy(() => {
-    resetGame()
   })
 </script>
 
-{#if $sessionRunning}
-  <main
-    class="container"
-    in:fade={{ duration: 100, delay: 200 }}
-    out:fade={{ duration: 100, delay: 0 }}
-  >
+<main
+  class="container"
+  in:fade={{ duration: 100, delay: 200 }}
+  out:fade={{ duration: 100, delay: 0 }}
+>
+  {#await setupReady}
+    <div class="waiting | flex-col">
+      <div>...</div>
+      <div>{$t.settingUp}</div>
+    </div>
+  {:then}
+    <OverlayGameOver
+      active={userWinsGame !== null}
+      {userWinsGame}
+      on:reset={() => {
+        handleReset()
+      }}
+    />
+
     <Overlay
       active={showEvaluation}
       btnText={$t.continue}
@@ -180,57 +227,67 @@
       </span>
     </Overlay>
 
-    {#if !$gameRunning && !userBegins}
-      <div class="npc-start flex-col">
-        {$t.npcBegins}
-        <button class="btn | rounded" on:click={() => moveNpc()}>Start</button>
-      </div>
-    {:else}
-      <Overlay
-        active={!$gameRunning}
-        btnText="Start"
-        on:close={() => {
-          $gameRunning = true
-          startTurn()
-        }}
-      >
-        <span slot="headline">
-          {$t.welcome}
-        </span>
-        <span slot="body">
-          {$t.chooseCat}
-        </span>
-      </Overlay>
+    {#if !isGameOver}
+      {#if !$gameRunning && !userBegins}
+        <div class="npc-start flex-col">
+          {$t.npcBegins}
+          <button class="btn | rounded" on:click={() => moveNpc()}>Start</button
+          >
+        </div>
+      {:else}
+        <Overlay
+          active={!$gameRunning}
+          btnText="Start"
+          on:close={() => {
+            $gameRunning = true
+            startTurn()
+          }}
+        >
+          <span slot="headline">
+            {$t.welcome}
+          </span>
+          <span slot="body">
+            {$t.chooseCat}
+          </span>
+        </Overlay>
 
-      <div class="info-box">
-        <span
-          >Computer: {$deckNpc.length}
-          {$t.card}{$deckNpc.length > 1 ? $t.cardPlural : ""}</span
-        >
-        <span class="float-right"
-          >User: {$deckUser.length}
-          {$t.card}{$deckUser.length > 1 ? $t.cardPlural : ""}</span
-        >
+        <div class="info-box">
+          <span
+            >Computer: {$deckNpc.length}
+            {$t.card}{$deckNpc.length > 1 ? $t.cardPlural : ""}</span
+          >
+          <span class="float-right"
+            >User: {$deckUser.length}
+            {$t.card}{$deckUser.length > 1 ? $t.cardPlural : ""}</span
+          >
+        </div>
+      {/if}
+
+      <div class="table | grid">
+        {#if ($gameRunning || userBegins) && userWinsGame === null}
+          <Card
+            {...$currentCardUser}
+            isGameCard
+            isUserCard
+            {isTurnComplete}
+            on:statPlayed={() => moveUser()}
+            on:animationEnd={() => (showEvaluation = true)}
+          />
+          <Card {...$currentCardNpc} isGameCard {isTurnComplete} />
+        {/if}
       </div>
     {/if}
-
-    <div class="table | grid">
-      {#if $gameRunning || userBegins}
-        <Card
-          {...$currentCardUser}
-          isGameCard
-          isUserCard
-          {isTurnComplete}
-          on:statPlayed={() => moveUser()}
-          on:animationEnd={() => (showEvaluation = true)}
-        />
-        <Card {...$currentCardNpc} isGameCard {isTurnComplete} />
-      {/if}
-    </div>
-  </main>
-{/if}
+  {/await}
+</main>
 
 <style>
+  .waiting {
+    --flex-gap: 0.5em;
+
+    margin-top: 40%;
+    font-size: 150%;
+  }
+
   .info-box {
     font-size: 65%;
     margin: 0.5em 0;

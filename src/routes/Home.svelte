@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
   import { link } from "svelte-spa-router"
-  import { ytCookiesAccepted, dictionary as t } from "../stores/settings.js"
+  import { ytCookiesAccepted, dictionary as t } from "../stores/settings"
   import BannerCookies from "../components/BannerCookies.svelte"
 </script>
 

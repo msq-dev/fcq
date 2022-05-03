@@ -1,5 +1,6 @@
 <script lang="ts">
   import { link } from "svelte-spa-router"
+
   export let catIndex = ""
   export let catName = ""
 </script>
@@ -9,7 +10,9 @@
   class="btn-category | flex-col shadow rounded"
   use:link
 >
-  <span class="cat-name">{catName}</span>
+  <span class="fit-text" style="--text-length: {catName.length};"
+    >{catName}</span
+  >
 </a>
 
 <style>
@@ -20,5 +23,6 @@
     color: currentColor;
     text-decoration: none;
     background-color: var(--npc-light);
+    justify-content: center;
   }
 </style>

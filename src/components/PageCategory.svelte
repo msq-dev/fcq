@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition"
-  import { appLanguage } from "../stores/settings.js"
-  import { decks } from "../stores/game.js"
+  import { appLanguage } from "../stores/settings"
+  import { decks } from "../stores/game"
   import Card from "./Card.svelte"
 
   export let cat: string
@@ -9,12 +9,8 @@
   $: cardsInCat = $decks[$appLanguage].filter(
     (card: ComposerCard) => card.index[0] === cat
   )
-  $: catHeadline = cardsInCat[0].category
 </script>
 
-<div class="headline" transition:fade={{ duration: 100, delay: 100 }}>
-  {catHeadline}
-</div>
 <div class="cards-container" transition:fade={{ duration: 100, delay: 100 }}>
   {#each cardsInCat as card}
     <Card {...card} shadow={false} />
@@ -36,11 +32,5 @@
     scroll-padding-inline: 1em;
     overflow-x: scroll;
     padding-left: 1em;
-  }
-
-  .headline {
-    grid-column: 2;
-    margin-bottom: 0.5em;
-    font-size: 75%;
   }
 </style>

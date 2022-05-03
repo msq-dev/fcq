@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte"
   import { fade } from "svelte/transition"
-  import { dictionary as t } from "../stores/settings.js"
+  import { dictionary as t } from "../stores/settings"
 
   const dispatch = createEventDispatcher()
 
@@ -15,7 +15,7 @@
 
 {#if active}
   <div
-    class="overlay grid"
+    class="overlay | grid"
     on:click={() => close()}
     transition:fade={{ duration: 100 }}
   >
