@@ -27,13 +27,13 @@
 </script>
 
 <main
-  class="grid-container"
+  class="grid-container | grid"
   in:fade={{ duration: 100, delay: 200 }}
   out:fade={{ duration: 100, delay: 0 }}
 >
   {#if !params.cat}
-    <h1>{$t.categories}</h1>
-    <div class="category-grid">
+    <h1 class="page-title">{$t.categories}</h1>
+    <div class="category-grid | grid">
       {#each categories as cat}
         <ButtonCategory {...cat} />
       {/each}
@@ -45,12 +45,14 @@
 
 <style>
   main {
-    padding: 1em 0;
-    margin-bottom: 20vh;
+    margin: 3vh auto 20vh auto;
+  }
+
+  .page-title {
+    margin-bottom: 0.5em;
   }
 
   .grid-container {
-    display: grid;
     grid-template-columns: 1fr min(100% - 2rem, 65ch) 1fr;
   }
 
@@ -58,17 +60,10 @@
     grid-column: 2;
   }
 
-  h1 {
-    margin-top: 2vh;
-    font-weight: 500;
-    margin-bottom: 0.5em;
-  }
-
   .category-grid {
     --min: 15ch;
     --gap: 1rem;
 
-    display: grid;
     grid-gap: var(--gap);
     grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--min)), 1fr));
   }

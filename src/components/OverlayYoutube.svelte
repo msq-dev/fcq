@@ -11,8 +11,8 @@
   } from "../stores/youtube"
 
   $: formattedTitle = $videoTitle.replace(
-    /(\([a-z . 0-9]+\))/g,
-    "<span style='font-style: normal;'>$1</span>"
+    /(\([UAa-z . 0-9]+\))/g,
+    "<span style='font-style: normal; white-space: nowrap;'>$1</span>"
   )
 </script>
 
@@ -46,7 +46,7 @@
   <div class="yt-title">
     {@html formattedTitle}
   </div>
-  <div class="yt-desc">{$videoDesc}</div>
+  <div class="yt-desc" lang={$t.languageCode}>{$videoDesc}</div>
   <div class="overlay-footer">
     <div class="btn btn-close | rounded" on:click={() => closeOverlay()}>
       {$t.close}
@@ -58,7 +58,7 @@
 <style>
   .yt-overlay {
     --align: start;
-    --flex-gap: 0.7em;
+    --flex-gap: 0.3em;
 
     padding: 1em;
     position: fixed;
@@ -70,6 +70,10 @@
     background-color: rgb(0 0 0 / 0.95);
   }
 
+  .cookie-banner {
+    font-size: 90%;
+  }
+
   .name {
     --scale: 18.5;
     font-weight: var(--fw-bold);
@@ -78,6 +82,7 @@
   .yt-iframe {
     align-self: center;
     width: 100%;
+    aspect-ratio: 16 / 9;
   }
 
   .yt-title {
@@ -87,6 +92,7 @@
 
   .yt-desc {
     font-size: 90%;
+    hyphens: auto;
   }
 
   .overlay-footer {

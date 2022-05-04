@@ -19,8 +19,8 @@
   import Overlay from "../components/Overlay.svelte"
   import OverlayStat from "../components/OverlayStat.svelte"
   import OverlayGameOver from "../components/OverlayGameOver.svelte"
+  import InfoBox from "../components/InfoBox.svelte"
 
-  // const cardsPerPlayer = 1
   const cardsPerPlayer = $decks[$appLanguage].length / 2
 
   let deck = []
@@ -47,9 +47,7 @@
     for (let i = 0; i < cardsPerPlayer; i++) {
       $deckUser = [...$deckUser, deck.pop()]
     }
-
     $deckNpc = deck
-    // $deckNpc = [...$deckNpc, deck.pop()]
 
     userBegins = null
     userWins = null
@@ -88,6 +86,7 @@
       )
     }
     evaluateTurn()
+    showEvaluation = true
   }
 
   function evaluateTurn() {
@@ -183,24 +182,43 @@
 </script>
 
 <main
-  class="container"
   in:fade={{ duration: 100, delay: 200 }}
   out:fade={{ duration: 100, delay: 0 }}
 >
   {#await setupReady}
     <div class="waiting | flex-col">
-      <div>...</div>
+      <div style="font-size: 300%;">...</div>
       <div>{$t.settingUp}</div>
     </div>
   {:then}
-    <OverlayGameOver
-      active={userWinsGame !== null}
-      {userWinsGame}
-      on:reset={() => {
-        handleReset()
-      }}
-    />
+    <!-- START -->
+    {#if !$gameRunning && !isGameOver}
+      {#if !userBegins}
+        <div class="npc-start flex-col">
+          {$t.npcBegins}
+          <button class="btn | rounded" on:click={() => moveNpc()}>Start</button
+          >
+        </div>
+      {:else}
+        <Overlay
+          active={!$gameRunning}
+          btnText="Start"
+          on:close={() => {
+            $gameRunning = true
+            startTurn()
+          }}
+        >
+          <span slot="headline">
+            {$t.welcome}
+          </span>
+          <span slot="body">
+            {$t.chooseCat}
+          </span>
+        </Overlay>
+      {/if}
+    {/if}
 
+    <!-- GAME -->
     <Overlay
       active={showEvaluation}
       btnText={$t.continue}
@@ -227,56 +245,22 @@
       </span>
     </Overlay>
 
-    {#if !isGameOver}
-      {#if !$gameRunning && !userBegins}
-        <div class="npc-start flex-col">
-          {$t.npcBegins}
-          <button class="btn | rounded" on:click={() => moveNpc()}>Start</button
-          >
-        </div>
-      {:else}
-        <Overlay
-          active={!$gameRunning}
-          btnText="Start"
-          on:close={() => {
-            $gameRunning = true
-            startTurn()
-          }}
-        >
-          <span slot="headline">
-            {$t.welcome}
-          </span>
-          <span slot="body">
-            {$t.chooseCat}
-          </span>
-        </Overlay>
-
-        <div class="info-box">
-          <span
-            >Computer: {$deckNpc.length}
-            {$t.card}{$deckNpc.length > 1 ? $t.cardPlural : ""}</span
-          >
-          <span class="float-right"
-            >User: {$deckUser.length}
-            {$t.card}{$deckUser.length > 1 ? $t.cardPlural : ""}</span
-          >
-        </div>
-      {/if}
-
+    {#if ($gameRunning || userBegins) && userWinsGame === null}
+      <InfoBox />
       <div class="table | grid">
-        {#if ($gameRunning || userBegins) && userWinsGame === null}
-          <Card
-            {...$currentCardUser}
-            isGameCard
-            isUserCard
-            {isTurnComplete}
-            on:statPlayed={() => moveUser()}
-            on:animationEnd={() => (showEvaluation = true)}
-          />
-          <Card {...$currentCardNpc} isGameCard {isTurnComplete} />
-        {/if}
+        <Card {...$currentCardUser} on:statPlayed={() => moveUser()} />
+        <!-- <Card {...$currentCardNpc} /> -->
       </div>
     {/if}
+
+    <!-- END -->
+    <OverlayGameOver
+      active={userWinsGame !== null}
+      {userWinsGame}
+      on:reset={() => {
+        handleReset()
+      }}
+    />
   {/await}
 </main>
 
@@ -288,18 +272,9 @@
     font-size: 150%;
   }
 
-  .info-box {
-    font-size: 65%;
-    margin: 0.5em 0;
-  }
-
   .npc-start {
     margin-top: 15vh;
     gap: 1em;
-  }
-
-  .float-right {
-    float: right;
   }
 
   .table {

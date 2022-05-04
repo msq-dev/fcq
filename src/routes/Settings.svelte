@@ -13,7 +13,7 @@
   in:fly={{ y: 500, delay: 200 }}
   out:fly={{ y: 500, duration: 100 }}
 >
-  <h1>{$t.settings}</h1>
+  <h1 class="page-title">{$t.settings}</h1>
   <div class="settings">
     <h2>{$t.language}</h2>
     <div class="input-group">
@@ -43,12 +43,8 @@
 
 <style>
   main {
+    --align: start;
     position: relative;
-  }
-
-  h1 {
-    margin-top: 5vh;
-    align-self: flex-start;
   }
 
   .settings {

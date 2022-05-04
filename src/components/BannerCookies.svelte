@@ -10,7 +10,9 @@
   out:fade={{ duration: 100 }}
 >
   <p>
-    {$t.usingYtCookies}<a href="/privacy" class="link" use:link>{$t.privacy}</a>
+    {@html $t.usingYtCookies}<a href="/privacy" class="link" use:link
+      >{$t.privacy}</a
+    >
   </p>
   <div class="button-group">
     <button

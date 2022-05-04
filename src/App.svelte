@@ -16,6 +16,7 @@
   import Game from "./routes/Game.svelte"
   import Browse from "./routes/Browse.svelte"
   import Settings from "./routes/Settings.svelte"
+  import About from "./routes/About.svelte"
   import Privacy from "./routes/Privacy.svelte"
   import NotFound from "./routes/NotFound.svelte"
 
@@ -27,6 +28,7 @@
     "/game": Game,
     "/browse/:cat?": Browse,
     "/settings": Settings,
+    "/about": About,
     "/privacy": Privacy,
     "*": NotFound,
   }
@@ -129,6 +131,7 @@
       <a href="/" use:link use:active>Home</a>
       <a href="/game" use:link use:active>{$t.play}</a>
       <a href="/browse" use:link use:active>{$t.browse}</a>
+      <a href="/about" use:link use:active>{$t.about}</a>
       <a href="/settings" use:link use:active>
         <IconSettings size={18} stroke={1.5} />
       </a>

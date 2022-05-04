@@ -75,7 +75,7 @@
 
   .abilities {
     grid-column: span 2;
-    margin-top: -0.3em;
-    letter-spacing: -0.02em;
+    margin-top: -0.2em;
+    line-height: 1.5em;
   }
 </style>

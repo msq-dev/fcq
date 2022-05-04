@@ -43,6 +43,7 @@ const dict: Dictionary = {
     yesPlease: "Yes, please",
     noThanks: "No, thanks",
     settingUp: "setting up game",
+    about: "About",
   },
   de: {
     languageCode: "de-DE",
@@ -72,7 +73,7 @@ const dict: Dictionary = {
     continue: "Weiter",
     privacy: "Datenschutzerklärung",
     usingYtCookies:
-      "Wir binden Videos von YouTube ein, d.h. es werden Cookies gesetzt. Details dazu entnehmen Sie bitte unserer ",
+      "Wir binden Videos von YouTube ein, d.&#x202F;h. es werden Cookies gesetzt. Details dazu entnehmen Sie bitte unserer ",
     reject: "Bitte nicht",
     accept: "Akzeptieren",
     goBack: "Zurück",
@@ -88,6 +89,7 @@ const dict: Dictionary = {
     yesPlease: "Aber gern",
     noThanks: "Nein, danke",
     settingUp: "bereite Spiel vor",
+    about: "About",
   },
 }
 

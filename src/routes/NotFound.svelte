@@ -9,7 +9,7 @@
   out:fade={{ duration: 100, delay: 0 }}
 >
   <h1>Ce site n'existe pas</h1>
-  <a href="/" class="nav-button" use:link>Home</a>
+  <a href="/" use:link>Home</a>
 </main>
 
 <style lang="scss">

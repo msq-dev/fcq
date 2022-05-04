@@ -42,7 +42,7 @@
   const colors = [
     "darkgreen",
     "crimson",
-    "aqua",
+    "darkmagenta",
     "darkorange",
     "deeppink",
     "blueviolet",
@@ -121,10 +121,7 @@
 
   function playStat(s: Stat) {
     if (!$sessionRunning || $statUser !== null) return
-
-    if (!$gameRunning) {
-      $gameRunning = true
-    }
+    if (!$gameRunning) $gameRunning = true
 
     $statUser = s
     dispatch("statPlayed")
@@ -165,82 +162,69 @@
   })
 </script>
 
-{#key index}
-  <div
-    id={index}
-    class="playing-card | rounded"
-    class:shadow
-    class:user-card={userClass}
-    class:npc-card={npcClass}
-    style="transform: scale({$cardSize}) translateX({$cardTranslationX}%) translateY({$cardTranslationY}%); z-index: {(userClass &&
-      !switchClass) ||
-    (npcClass && switchClass)
-      ? 5
-      : -5}; --shadow-clr: {(userClass && !switchClass) ||
-    (npcClass && switchClass)
-      ? 'rgb(0 0 0 / 0.25)'
-      : 'rgb(0 0 0 / 0)'};"
-    in:fade={{ duration: 100 }}
-    on:introstart={() => resetTweens()}
-  >
-    <div class="head-container" style:color={categoryColor}>
-      <div class="category | small">{category}</div>
-      <div class="index | small">{index}</div>
-    </div>
-    <div class="names-container">
-      <div class="name | fit-text" style="--text-length: {name.length};">
-        {name}
-      </div>
-      {#if nameMaiden}
-        <div class="maiden-name | small">({$t.born} {nameMaiden})</div>
-      {/if}
-    </div>
-    <div class="life-container">
-      <div class="date birth">
-        {#if birthday.length === 4}
-          <sup>(&lowast;)</sup>
-        {:else}
-          <sup>&lowast;</sup>
-        {/if}
-        {birthday} in {placeOfBirth}
-      </div>
-      {#if dateOfDeath}
-        <div class="date death">&dagger; {deathday} in {placeOfDeath}</div>
-      {/if}
-    </div>
-    <div class="portrait-container" on:click={() => showYoutubeOverlay()}>
-      <img loading="lazy" class="portrait" {src} alt={$t.portraitOf + name} />
-      <img
-        loading="lazy"
-        class="bg-portrait"
-        {src}
-        alt={$t.portraitOf + name}
-      />
-      {#if ytId}
-        <div class="yt-icon">
-          <IconSpeaker size={30} />
-        </div>
-      {/if}
-    </div>
-    <div class="stats-table">
-      {#each stats as stat}
-        <CardStat {stat} on:statClicked={() => playStat(stat)} />
-      {/each}
-    </div>
-    <div class="app-title | small">Female Composers Quartets</div>
+<div
+  id={index}
+  class="playing-card | rounded"
+  class:shadow
+  class:user-card={userClass}
+  class:npc-card={npcClass}
+  style="transform: scale({$cardSize}) translateX({$cardTranslationX}%) translateY({$cardTranslationY}%);"
+  in:fade={{ duration: 100 }}
+  on:introstart={() => resetTweens()}
+>
+  <div class="head-container" style:color={categoryColor}>
+    <div class="category | small">{category}</div>
+    <div class="index | small">{index}</div>
   </div>
-{/key}
+  <div class="names-container">
+    <div class="name | fit-text" style="--text-length: {name.length};">
+      {name}
+    </div>
+    {#if nameMaiden}
+      <div class="maiden-name | small">({$t.born} {nameMaiden})</div>
+    {/if}
+  </div>
+  <div class="life-container">
+    <div class="date birth">
+      {#if birthday.length === 4}
+        <sup
+          ><span class="small">(</span>&lowast;<span class="small">)</span></sup
+        >
+      {:else}
+        <sup>&lowast;</sup>
+      {/if}
+      {birthday} in {placeOfBirth}
+    </div>
+    {#if dateOfDeath}
+      <div class="date death">&dagger; {deathday} in {placeOfDeath}</div>
+    {/if}
+  </div>
+  <div class="portrait-container" on:click={() => showYoutubeOverlay()}>
+    <img loading="lazy" class="portrait" {src} alt={$t.portraitOf + name} />
+    <img loading="lazy" class="bg-portrait" {src} alt={$t.portraitOf + name} />
+    {#if ytId}
+      <div class="yt-icon">
+        <IconSpeaker size={30} />
+      </div>
+    {/if}
+  </div>
+  <div class="stats-table">
+    {#each stats as stat}
+      <CardStat {stat} on:statClicked={() => playStat(stat)} />
+    {/each}
+  </div>
+  <div class="app-title | small">Female Composers Quartets</div>
+</div>
 
-<style lang="scss">
+<style>
   .playing-card {
-    --size-portrait: 12rem;
+    --size-portrait: min(40%, 22rem);
 
     position: relative;
     font-size: 90%;
-    background-color: ghostwhite;
-    width: calc(100% - 2rem);
-    height: 30rem;
-    min-width: 80vw;
+    background-color: var(--white);
+    width: min(100vmin - 4.5rem, 30rem);
+    aspect-ratio: 1 / 1.6;
     padding: 0.5em 1em;
     display: flex;
     flex-direction: column;
@@ -284,25 +268,25 @@
   .portrait-container {
     position: relative;
     height: var(--size-portrait);
+  }
 
-    > img {
-      position: absolute;
-      height: 100%;
-    }
+  .portrait-container > img {
+    position: absolute;
+    height: 100%;
+  }
 
-    .portrait {
-      object-fit: contain;
-      z-index: 5;
-      left: 50%;
-      transform: translateX(-50%);
-    }
+  .portrait {
+    object-fit: contain;
+    z-index: 5;
+    left: 50%;
+    transform: translateX(-50%);
+  }
 
-    .bg-portrait {
-      object-fit: cover;
-      z-index: 0;
-      width: 100%;
-      opacity: 0.5;
-    }
+  .bg-portrait {
+    object-fit: cover;
+    z-index: 0;
+    width: 100%;
+    opacity: 0.5;
   }
 
   .yt-icon {

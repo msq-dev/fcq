@@ -109,17 +109,21 @@ h6 {
   --user-dark: #7f3c41;
   --npc-light: #e1edeb;
   --npc-dark: #647d85;
+
+  --dark-blue: #0d374d;
+  --green-blue: #0c5c63;
   --white: ghostwhite;
   --gray: #aaa;
-  --link: #1790d1;
+  --link: #1a6d99;
   --warning: #d12b37;
   --success: #018522;
-  --fw-normal: 300;
+  --fw-normal: 320;
   --fw-bold: 450;
 }
 
 body {
-  font-family: "Rubik", sans-serif;
+  font-family: "Rubik", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   font-weight: var(--fw-normal);
   background-color: #b0c3cb;
 }
@@ -156,6 +160,10 @@ a.btn {
   margin: 0 auto;
 }
 
+main.container {
+  margin: 3vh auto 20vh auto;
+}
+
 /* Utilities */
 .rounded {
   border-top-left-radius: var(--br-size, 0.5rem);
@@ -176,6 +184,10 @@ a.btn {
   font-weight: var(--fw-bold);
 }
 
+.italic {
+  font-style: italic;
+}
+
 .small {
   font-size: 75%;
 }
@@ -186,6 +198,14 @@ a.btn {
 
 .text-center {
   text-align: center;
+}
+
+.float-right {
+  float: right;
+}
+
+.page-title {
+  font-size: 200%;
 }
 
 .flex-col {
@@ -241,29 +261,17 @@ a.btn {
 
 .btn-reject {
   --bg-color: var(--warning);
-  color: #fff;
+  color: var(--white);
 }
 
 .btn-accept {
   --bg-color: var(--success);
-  color: #fff;
+  color: var(--white);
 }
 
 .cookie-banner {
   padding: 1em 1.5em;
-  background-color: #0d374d;
-  color: #fff;
+  background-color: var(--dark-blue);
+  color: var(--white);
   width: 100%;
-}
-
-.nav-button::before {
-  content: "\2192";
-  margin-right: 0.3em;
-}
-
-.nav-button {
-  text-decoration: none;
-  padding: 0.15em 0.75em 0.25em 0.5em;
-  border-radius: 0.2em;
-  color: inherit;
 }
