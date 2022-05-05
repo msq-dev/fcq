@@ -11,7 +11,10 @@
   )
 </script>
 
-<div class="cards-container" transition:fade={{ duration: 100, delay: 100 }}>
+<div
+  class="cards-container | full-bleed"
+  transition:fade={{ duration: 100, delay: 100 }}
+>
   {#each cardsInCat as card}
     <Card {...card} shadow={false} />
   {/each}
@@ -19,18 +22,15 @@
 
 <style>
   .cards-container {
-    grid-column: 1 / 4;
-
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: 80%;
-    gap: 2em;
+    gap: 1.5em;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-inline: contain;
     scroll-snap-type: inline mandatory;
     scroll-behavior: smooth;
     scroll-padding-inline: 1em;
     overflow-x: scroll;
-    padding-left: 1em;
+    padding: 0 1em;
   }
 </style>

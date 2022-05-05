@@ -9,7 +9,7 @@
 </script>
 
 <main
-  class="container | flex-col"
+  class="container"
   in:fly={{ y: 500, delay: 200 }}
   out:fly={{ y: 500, duration: 100 }}
 >
@@ -55,11 +55,11 @@
   h2 {
     padding-bottom: 0.2em;
     margin: 0.5em 0;
-    border-bottom: 1px dotted var(--npc-dark);
+    border-bottom: 1px dotted var(--slate-400);
   }
 
   .input-group {
-    accent-color: var(--npc-dark);
+    accent-color: var(--slate-400);
     margin-bottom: 0.25em;
   }
 

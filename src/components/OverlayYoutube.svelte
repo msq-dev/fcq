@@ -16,62 +16,65 @@
   )
 </script>
 
-<div class="yt-overlay | flex-col" transition:fade={{ duration: 100 }}>
-  <div class="names-container">
+<div class="yt-overlay" transition:fade={{ duration: 200 }}>
+  <div class="container">
     <div class="name | fit-text" style="--text-length: {$composerName.length}">
       {$composerName}
     </div>
-  </div>
 
-  {#if !$ytCookiesAccepted}
-    <div class="cookie-banner | flex-col">
-      <p>
-        {$t.noVideo}<a href="/privacy" class="link" use:link>{$t.privacy}</a>
-      </p>
-      <button
-        class="btn btn-accept | rounded"
-        on:click={() => ($ytCookiesAccepted = true)}>{$t.accept}</button
-      >
+    <div class="yt-iframe">
+      {#if !$ytCookiesAccepted}
+        <div class="cookie-banner | flex-col">
+          <p>
+            {$t.noVideo}<a href="/privacy" class="link light" use:link
+              >{$t.privacy}</a
+            >
+          </p>
+          <button
+            class="btn btn-accept | rounded"
+            on:click={() => ($ytCookiesAccepted = true)}>{$t.accept}</button
+          >
+        </div>
+      {:else}
+        <iframe
+          src="https://www.youtube.com/embed/{$videoId}"
+          title="YouTube video player"
+          frameborder="0"
+          loading="lazy"
+        />
+      {/if}
     </div>
-  {:else}
-    <iframe
-      class="yt-iframe"
-      src="https://www.youtube.com/embed/{$videoId}"
-      title="YouTube video player"
-      frameborder="0"
-      loading="lazy"
-    />
-  {/if}
 
-  <div class="yt-title">
-    {@html formattedTitle}
-  </div>
-  <div class="yt-desc" lang={$t.languageCode}>{$videoDesc}</div>
-  <div class="overlay-footer">
-    <div class="btn btn-close | rounded" on:click={() => closeOverlay()}>
-      {$t.close}
+    <div class="yt-title">
+      {@html formattedTitle}
     </div>
-    <div class="app-title | small">Female Composers Quartets</div>
+    <div class="yt-desc" lang={$t.languageCode}>{$videoDesc}</div>
+    <div class="overlay-footer | flex-between">
+      <div class="btn btn-close | rounded" on:click={() => closeOverlay()}>
+        {$t.close}
+      </div>
+      <div class="app-title | small">Female Composers Quartets</div>
+    </div>
   </div>
 </div>
 
 <style>
   .yt-overlay {
-    --align: start;
-    --flex-gap: 0.3em;
-
-    padding: 1em;
+    padding-top: 0.5em;
     position: fixed;
     inset: 0;
     width: 100%;
     height: 100%;
     z-index: 50;
-    color: ghostwhite;
+    color: var(--white);
     background-color: rgb(0 0 0 / 0.95);
+    overflow-y: scroll;
   }
 
   .cookie-banner {
+    height: 100%;
     font-size: 90%;
+    justify-content: center;
   }
 
   .name {
@@ -85,6 +88,11 @@
     aspect-ratio: 16 / 9;
   }
 
+  .yt-iframe > iframe {
+    width: 100%;
+    height: 100%;
+  }
+
   .yt-title {
     font-weight: var(--fw-bold);
     font-style: italic;
@@ -96,11 +104,8 @@
   }
 
   .overlay-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     width: 100%;
-    margin-top: 0.7em;
+    margin-top: 0.3em;
   }
 
   .btn-close {
@@ -110,6 +115,6 @@
   }
 
   .app-title {
-    color: var(--gray);
+    color: var(--gray-400);
   }
 </style>

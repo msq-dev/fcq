@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte"
+  import { onMount, onDestroy } from "svelte"
   import { fade } from "svelte/transition"
   import { appLanguage, dictionary as t } from "../stores/settings"
   import {
@@ -20,6 +20,8 @@
   import OverlayStat from "../components/OverlayStat.svelte"
   import OverlayGameOver from "../components/OverlayGameOver.svelte"
   import InfoBox from "../components/InfoBox.svelte"
+
+  import { shuffle } from "../utils/utils"
 
   const cardsPerPlayer = $decks[$appLanguage].length / 2
 
@@ -167,17 +169,12 @@
     setupGame()
   }
 
-  // courtesy of https://stackoverflow.com/a/12646864
-  function shuffle(array: ComposerCard[]) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      ;[array[i], array[j]] = [array[j], array[i]]
-    }
-    return array
-  }
-
   onMount(() => {
     setupGame()
+  })
+
+  onDestroy(() => {
+    resetGame()
   })
 </script>
 
@@ -266,14 +263,14 @@
 
 <style>
   .waiting {
-    --flex-gap: 0.5em;
+    --gap: 0.5em;
 
     margin-top: 40%;
     font-size: 150%;
   }
 
   .npc-start {
-    margin-top: 15vh;
+    margin-top: 40%;
     gap: 1em;
   }
 

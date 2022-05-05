@@ -46,12 +46,12 @@
   .stat {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    border-bottom: 1px dotted var(--gray);
+    border-bottom: 1px dotted var(--gray-400);
 
     .value {
       text-align: right;
       margin-right: 0.5em;
-      color: var(--npc-dark);
+      color: var(--slate-400);
     }
 
     &:last-of-type {
@@ -76,6 +76,6 @@
   .abilities {
     grid-column: span 2;
     margin-top: -0.2em;
-    line-height: 1.5em;
+    line-height: 1.45em;
   }
 </style>

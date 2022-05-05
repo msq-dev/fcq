@@ -1,25 +1,29 @@
 <script>
   import { fade } from "svelte/transition"
+
+  const currentYear = new Date().getFullYear()
+
+  $: copyright = `&copy;&#x200A;${
+    currentYear !== 2022
+      ? "2022&#x200A;&ndash;&#x200A;" + currentYear
+      : currentYear
+  }`
 </script>
 
-<main
-  class="container | flex-col"
-  transition:fade={{ duration: 100, delay: 100 }}
->
+<main class="container" transition:fade={{ duration: 100, delay: 100 }}>
   <div class="title-block">
     <h1 class="page-title">Impressum</h1>
     <h2 class="subtitle">FCQ &mdash; Female Composers Quartets</h2>
   </div>
   <div class="company-block">
     <div class="title | bold">rost<span class="gray">ling</span></div>
-    <div class="">Henrike Rost & Max Spuling</div>
-    <div class="mail">
-      <a href="mailto:kontakt@rostling.de" class="link">kontakt@rostling.de</a>
-    </div>
+    <div>Henrike Rost & Max Spuling</div>
+    <a href="https://rostling.de/" class="link">rostling.de</a>
+    <a href="mailto:kontakt@rostling.de" class="link">kontakt@rostling.de</a>
   </div>
   <div class="btn-container">
     <a
-      title="Support Us on ko-fi.com"
+      title="Support us on ko-fi.com"
       class="kofi-button"
       style="background-color:#29abe0;"
       href="https://ko-fi.com/O5O2CGWA4"
@@ -30,7 +34,7 @@
           src="https://storage.ko-fi.com/cdn/cup-border.png"
           alt="Ko-fi donations"
           class="kofiimg"
-        />Support Us on Ko-fi</span
+        />Support us on Ko-fi</span
       ></a
     >
   </div>
@@ -51,7 +55,9 @@
       hervorgegangen, dessen intensivere Erkundung wir anregen wollen.
       Ausdrücklich empfehlen möchten wir:
     </p>
-    <div class="source | container">
+  </div>
+  <div class="source-block | container">
+    <div class="source">
       <p>MUGI. Musik(vermittlung) und Gender(forschung) im Internet</p>
       <p>
         Hg. von Beatrix Borchard und Nina Noeske (Hochschule für Musik und
@@ -61,52 +67,58 @@
         >https://mugi.hfmt-hamburg.de</a
       >
     </div>
-    <div class="source | container">
+    <div class="source">
       <p>Instrumentalistinnen-Lexikon des Sophie Drinker Instituts</p>
       <p>Hg. von Freia Hoffmann</p>
       <a href="https://www.sophie-drinker-institut.de/lexikon" class="link"
         >https://www.sophie-drinker-institut.de/lexikon</a
       >
     </div>
-    <div class="source | container">
+    <div class="source">
       <p>
         Online-Fembio-Datenbank des Instituts für Frauen-Biographieforschung
       </p>
       <p>Hg. von Luise F. Pusch</p>
       <a href="https://www.fembio.org/" class="link">https://www.fembio.org/</a>
     </div>
-    <div class="source | container">
+    <div class="source">
       <p>
         Wikipedia-Seiten zu Komponistinnen (in ihrer Aktualität nicht zu
         unterschätzen)
       </p>
     </div>
-    <div class="credits">
-      <p>
-        Fast alle verwendeten Abbildungen sind gemeinfrei und stammen von
-        Wikipedia. Ausgenommen sind die Bilder von Sofia Gubaidulina (July 1981,
-        Sortavala &copy; Dmitri N. Smirnov) sowie von Florence Price, Ruth
-        Gipps, Kaija Saariaho, Unsuk Chin, Olga Neuwirth und Isabel Mundry. Für
-        letztere Bilder verlinken wir auf andere Websites.
-      </p>
-      <p>
-        Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter
-        oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden
-        zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft.
-        Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht
-        erkennbar.
-      </p>
-      <p>
-        Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch
-        ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar.
-      </p>
-    </div>
   </div>
+  <div class="text-block">
+    <p>
+      Fast alle verwendeten Abbildungen sind gemeinfrei und stammen von
+      Wikipedia. Ausgenommen sind die Bilder von Sofia Gubaidulina (July 1981,
+      Sortavala &copy; Dmitri N. Smirnov) sowie von Florence Price, Ruth Gipps,
+      Kaija Saariaho, Unsuk Chin, Olga Neuwirth und Isabel Mundry. Für letztere
+      Bilder verlinken wir auf andere Websites.
+    </p>
+    <p>
+      Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter
+      oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum
+      Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft.
+      Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar.
+    </p>
+    <p>
+      Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch
+      ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar.
+    </p>
+    <p>
+      Icons: <a href="https://feathericons.com/" class="link">Feather</a>
+      made by
+      <a href="https://twitter.com/colebemis" class="link">@colebemis</a>
+    </p>
+  </div>
+  <div class="copyright">{@html copyright} rostling</div>
 </main>
 
 <style lang="scss">
   main {
-    --align: start;
+    --vertical-rhythm: 1em;
+    margin-bottom: 10vh;
   }
 
   .subtitle {
@@ -117,32 +129,45 @@
   }
 
   .company-block {
+    .link {
+      display: block;
+    }
+
+    > * + * {
+      margin-top: 0.2em;
+    }
+
     .title {
       font-size: 160%;
     }
 
     .title .gray {
-      color: var(--npc-dark);
+      color: var(--slate-400);
     }
   }
 
   .text-block {
-    p + p {
-      margin-top: 0.25em;
+    > p + p {
+      margin-top: 0.5em;
     }
-    .source {
-      --max-width: 60ch;
-      margin-top: 0.85em;
+  }
 
-      > p:first-of-type {
-        font-weight: var(--fw-bold);
-        // font-style: italic;
-      }
-    }
+  .source-block {
+    --vertical-rhythm: 1em;
+  }
 
-    .credits {
-      margin-top: 1em;
+  .source {
+    > p:first-of-type {
+      font-weight: var(--fw-bold);
+      margin-bottom: 0.25em;
     }
+  }
+
+  .copyright {
+    text-align: center;
+    margin-top: 3.5em;
+    font-size: 90%;
+    color: var(--slate-400);
   }
 
   .btn-container {

@@ -17,7 +17,7 @@
   <div
     class="overlay | grid"
     on:click={() => close()}
-    transition:fade={{ duration: 100 }}
+    transition:fade={{ duration: 200 }}
   >
     <div class="overlay-content | flex-col">
       <div class="headline | bold upper">
@@ -34,11 +34,12 @@
 
 <style lang="scss">
   .overlay-content {
-    --flex-gap: 0.5em;
+    --gap: 0.15em;
     place-self: center;
 
     .headline {
       font-size: 150%;
+      margin-bottom: 1em;
     }
   }
 

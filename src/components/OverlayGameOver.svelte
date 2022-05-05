@@ -16,7 +16,7 @@
 </script>
 
 {#if active}
-  <div class="overlay | grid" transition:fade={{ duration: 100 }}>
+  <div class="overlay | grid" transition:fade={{ duration: 200 }}>
     {#if userWinsGame}
       <Confetti />
     {/if}
@@ -31,7 +31,7 @@
         reprehenderit soluta sed?
       </div>
 
-      <div class="button-group">
+      <div class="button-group | flex-between">
         <a href="/" class="btn btn-reject | rounded shadow" use:link
           >{$t.noThanks}</a
         >

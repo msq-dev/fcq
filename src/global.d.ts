@@ -9,8 +9,10 @@ interface ComposerCard {
   nameMaiden: string
   imageUrl: string
   dateOfBirth: string
+  birthIsBaptized: string
   placeOfBirth: string
   dateOfDeath: string
+  dateDeathOverride: string
   placeOfDeath: string
   ytTitle: string
   ytDesc: string

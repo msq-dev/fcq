@@ -5,7 +5,7 @@ import { dict } from "../assets/dict"
 // export const ytCookiesAccepted = writable(storedCookiePreference || null)
 // ytCookiesAccepted.subscribe((value) => (localStorage.acceptCookies = value))
 
-export const ytCookiesAccepted = writable(true)
+export const ytCookiesAccepted = writable(false)
 
 export const appLanguage: Writable<string> = writable("de")
 export const dictionary = derived(

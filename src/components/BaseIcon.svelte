@@ -2,6 +2,7 @@
   export let size = 24
   export let stroke = 2
   export let strokeColor = "currentColor"
+  export let inline = false
 </script>
 
 <svg
@@ -14,7 +15,15 @@
   stroke-width={stroke}
   stroke-linecap="round"
   stroke-linejoin="round"
-  class="feather feather-settings"
+  class:inline
+  class="feather"
 >
   <slot />
 </svg>
+
+<style>
+  .inline {
+    display: inline;
+    vertical-align: middle;
+  }
+</style>

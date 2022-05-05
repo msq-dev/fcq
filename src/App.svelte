@@ -96,10 +96,12 @@
         category: composer.category,
         name: composer.name,
         nameMaiden: composer.nameMaiden,
-        imageUrl: composer.imageUrl || "Placeholder.png",
-        dateOfBirth: composer.dateOfBirth,
+        imageUrl: composer.imageUrl || "fcq_placeholder.jpg",
+        dateOfBirth: composer.dateOfBirth || null,
+        birthIsBaptized: composer.birthIsBaptized,
         placeOfBirth: composer.placeOfBirth,
         dateOfDeath: composer.dateOfDeath || null,
+        dateDeathOverride: composer.dateDeathOverride || null,
         placeOfDeath: composer.placeOfDeath || null,
         ytTitle: composer.ytTitle,
         ytDesc: composer.ytDesc,
@@ -128,13 +130,17 @@
 
   {#if $location !== "/" && $location !== "/settings"}
     <nav class="shadow" transition:fade={{ duration: 100 }}>
-      <a href="/" use:link use:active>Home</a>
-      <a href="/game" use:link use:active>{$t.play}</a>
-      <a href="/browse" use:link use:active>{$t.browse}</a>
-      <a href="/about" use:link use:active>{$t.about}</a>
-      <a href="/settings" use:link use:active>
-        <IconSettings size={18} stroke={1.5} />
-      </a>
+      <div class="container">
+        <div class="nav-links">
+          <a href="/" use:link use:active>Home</a>
+          <a href="/game" use:link use:active>{$t.play}</a>
+          <a href="/browse" use:link use:active>{$t.browse}</a>
+          <a href="/about" use:link use:active>{$t.about}</a>
+          <a href="/settings" use:link use:active>
+            <IconSettings size={18} stroke={1.5} />
+          </a>
+        </div>
+      </div>
     </nav>
   {/if}
 </div>
@@ -150,11 +156,15 @@
     position: fixed;
     inset: auto 0 0 0;
     z-index: 20;
-    display: flex;
-    justify-content: space-around;
     padding: 0.5em 0;
-    color: var(--npc-light);
-    background-color: var(--npc-dark);
+    color: var(--slate-100);
+    background-color: var(--slate-400);
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }
 
     a {
       font-size: 85%;

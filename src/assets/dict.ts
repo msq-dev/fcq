@@ -1,7 +1,7 @@
-const dict: Dictionary = {
+export const dict: Dictionary = {
   en: {
     languageCode: "en-US",
-    born: "b.",
+    born: "née",
     age: "Age at death",
     currentAge: "Age",
     works: "Number of works",
@@ -32,7 +32,7 @@ const dict: Dictionary = {
     accept: "Accept",
     goBack: "Back",
     noVideo:
-      "Sadly you can not listen to this great piece of music without accepting cookies from YouTube. Here is our ",
+      "Sadly you cannot listen to this great piece of music without accepting cookies from YouTube. Here is our ",
     cookieCheckbox: "Accept cookies from YouTube",
     see: "See our",
     welcome: "Welcome",
@@ -42,8 +42,9 @@ const dict: Dictionary = {
     andCounting: "and hopefully counting",
     yesPlease: "Yes, please",
     noThanks: "No, thanks",
-    settingUp: "setting up game",
+    settingUp: "Setting up game",
     about: "About",
+    bapt: "bapt.",
   },
   de: {
     languageCode: "de-DE",
@@ -88,9 +89,8 @@ const dict: Dictionary = {
     andCounting: "und hoffentlich mehr",
     yesPlease: "Aber gern",
     noThanks: "Nein, danke",
-    settingUp: "bereite Spiel vor",
+    settingUp: "Lade Spiel",
     about: "About",
+    bapt: "get.",
   },
 }
-
-export { dict }

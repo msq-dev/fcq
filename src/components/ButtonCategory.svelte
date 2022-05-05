@@ -5,11 +5,7 @@
   export let catName = ""
 </script>
 
-<a
-  href="/browse/{catIndex}"
-  class="btn-category | flex-col shadow rounded"
-  use:link
->
+<a href="/browse/{catIndex}" class="btn-category | shadow rounded" use:link>
   <span class="fit-text" style="--text-length: {catName.length};"
     >{catName}</span
   >
@@ -21,8 +17,8 @@
 
     padding: 0.5em 0;
     color: currentColor;
+    text-align: center;
     text-decoration: none;
-    background-color: var(--npc-light);
-    justify-content: center;
+    background-color: var(--slate-100);
   }
 </style>

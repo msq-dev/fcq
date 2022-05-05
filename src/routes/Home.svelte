@@ -5,10 +5,7 @@
   import BannerCookies from "../components/BannerCookies.svelte"
 </script>
 
-<main
-  class="home | container | flex-col"
-  transition:fade={{ duration: 100, delay: 100 }}
->
+<main class="home | container" transition:fade={{ duration: 100, delay: 100 }}>
   <h1 class="main-title | bold">
     Female<br />Composers<br />Quartets
   </h1>
@@ -41,7 +38,7 @@
   .main-title {
     background-image: linear-gradient(
       -311deg,
-      var(--green-blue) 30%,
+      var(--teal-400) 30%,
       #128b96 100%
     );
     background-clip: text;
@@ -69,20 +66,15 @@
   .nav-button {
     flex: 1;
     color: var(--white);
-    background-color: #128b96;
+    background-color: var(--teal-400);
     padding: 0.5em 1em;
     text-decoration: none;
     font-size: 120%;
     text-align: center;
   }
 
-  .btn-play {
-    flex: 10;
-    background-color: var(--green-blue);
-  }
-
   .btn-settings,
   .btn-about {
-    background-color: var(--npc-dark);
+    background-color: var(--slate-400);
   }
 </style>

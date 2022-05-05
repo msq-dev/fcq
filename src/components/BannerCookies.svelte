@@ -5,16 +5,16 @@
 </script>
 
 <div
-  class="cookie-banner | flex-col fixed-bottom"
+  class="cookie-banner | container fixed-bottom"
   in:fly={{ y: 500, delay: 500 }}
   out:fade={{ duration: 100 }}
 >
   <p>
-    {@html $t.usingYtCookies}<a href="/privacy" class="link" use:link
+    {@html $t.usingYtCookies}<a href="/privacy" class="link light" use:link
       >{$t.privacy}</a
     >
   </p>
-  <div class="button-group">
+  <div class="button-group | flex-between">
     <button
       class="btn btn-reject | rounded"
       on:click={() => ($ytCookiesAccepted = false)}>{$t.reject}</button

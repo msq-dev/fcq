@@ -4,3 +4,6 @@
 .prettierrc.json
 .gitkeep
 .DS_Store
+
+/src/routes/About.svelte
+/src/routes/Privacy.svelte

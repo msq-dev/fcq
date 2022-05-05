@@ -16,12 +16,16 @@
   import CardStat from "./CardStat.svelte"
   import IconSpeaker from "./IconSpeaker.svelte"
 
+  import { checkIfImageExists } from "../utils/utils"
+
   export let index = ""
   export let category = ""
   export let name = ""
   export let nameMaiden = ""
   export let dateOfBirth = ""
+  export let birthIsBaptized = ""
   export let dateOfDeath = ""
+  export let dateDeathOverride = ""
   export let placeOfBirth = ""
   export let placeOfDeath = ""
   export let imageUrl = ""
@@ -60,14 +64,14 @@
 
   $: categoryColor = colors[parseInt(index[0]) - 1]
   $: birthday = formatDate(dateOfBirth)
-  $: deathday = formatDate(dateOfDeath)
+  $: deathday = dateDeathOverride || formatDate(dateOfDeath)
   $: isTurnComplete ? animateCards() : null
 
   $: userClass = isGameCard && isUserCard
   $: npcClass = isGameCard && !isUserCard
 
   $: srcUrl = /^https?/.test(imageUrl) ? imageUrl : IMG_BASE_URL + imageUrl
-  $: src = imgExists ? srcUrl : IMG_BASE_URL + "Placeholder.png"
+  $: src = imgExists ? srcUrl : IMG_BASE_URL + "fcq_placeholder.jpg"
 
   function animateCards() {
     let translation
@@ -97,11 +101,10 @@
 
   function formatDate(date: string) {
     const day = new Date(date)
-    const onlyYear = day.getDate() === 31 && day.getMonth() === 11
     const dateOptions: any = {
       year: "numeric",
-      month: onlyYear ? undefined : "long",
-      day: onlyYear ? undefined : "numeric",
+      month: "long",
+      day: "numeric",
     }
     return day.toLocaleDateString($t.languageCode, dateOptions)
   }
@@ -128,27 +131,13 @@
   }
 
   function showYoutubeOverlay() {
+    if (!ytId) return
+
     $showOverlay = true
     $videoId = ytId
     $videoTitle = ytTitle
     $videoDesc = ytDesc
     $composerName = name
-  }
-
-  function checkIfImageExists(url: string, callback: Function) {
-    const img = new Image()
-    img.src = url
-
-    if (img.complete) {
-      callback(true)
-    } else {
-      img.onload = () => {
-        callback(true)
-      }
-      img.onerror = () => {
-        callback(false)
-      }
-    }
   }
 
   onMount(() => {
@@ -172,7 +161,7 @@
   in:fade={{ duration: 100 }}
   on:introstart={() => resetTweens()}
 >
-  <div class="head-container" style:color={categoryColor}>
+  <div class="head-container | flex-between" style:color={categoryColor}>
     <div class="category | small">{category}</div>
     <div class="index | small">{index}</div>
   </div>
@@ -186,10 +175,11 @@
   </div>
   <div class="life-container">
     <div class="date birth">
-      {#if birthday.length === 4}
+      {#if birthIsBaptized}
         <sup
           ><span class="small">(</span>&lowast;<span class="small">)</span></sup
         >
+        {$t.bapt}
       {:else}
         <sup>&lowast;</sup>
       {/if}
@@ -224,7 +214,7 @@
     font-size: 90%;
     background-color: var(--white);
     width: min(100vmin - 4.5rem, 30rem);
-    aspect-ratio: 1 / 1.6;
+    aspect-ratio: 1 / 1.55;
     padding: 0.5em 1em;
     display: flex;
     flex-direction: column;
@@ -233,7 +223,7 @@
   }
 
   .head-container {
-    color: #666;
+    color: var(--gray-400);
   }
 
   .category,
@@ -243,7 +233,6 @@
   }
 
   .index {
-    float: right;
     text-transform: uppercase;
     letter-spacing: 0.25em;
   }
@@ -291,6 +280,7 @@
 
   .yt-icon {
     position: absolute;
+    z-index: 5;
     bottom: 0.75em;
     right: 0.75em;
   }
@@ -303,7 +293,7 @@
     position: absolute;
     bottom: 0.75em;
     right: 1em;
-    color: var(--gray);
+    color: var(--gray-400);
   }
 
   .user-card,

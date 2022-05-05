@@ -27,7 +27,7 @@
 </script>
 
 <main
-  class="grid-container | grid"
+  class="container"
   in:fade={{ duration: 100, delay: 200 }}
   out:fade={{ duration: 100, delay: 0 }}
 >
@@ -52,19 +52,10 @@
     margin-bottom: 0.5em;
   }
 
-  .grid-container {
-    grid-template-columns: 1fr min(100% - 2rem, 65ch) 1fr;
-  }
-
-  .grid-container > * {
-    grid-column: 2;
-  }
-
   .category-grid {
     --min: 15ch;
-    --gap: 1rem;
 
-    grid-gap: var(--gap);
     grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--min)), 1fr));
+    grid-auto-rows: 1fr;
   }
 </style>

@@ -26,7 +26,8 @@
 
 <style>
   .overlay-stat {
-    margin-bottom: 0.5em;
+    --align: start;
+    margin-bottom: 1em;
   }
 
   .winner {
