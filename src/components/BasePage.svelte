@@ -7,7 +7,7 @@
   onMount(() => {
     if (
       $location === "/" ||
-      $location === "/browse/:cat?" ||
+      $location === "/browse" ||
       $location === "/about"
     ) {
       resetGame()

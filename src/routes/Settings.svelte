@@ -6,6 +6,7 @@
     appLanguage,
     dictionary as t,
   } from "../stores/settings"
+  import FadingElement from "../components/FadingElement.svelte"
 </script>
 
 <main
@@ -13,9 +14,11 @@
   in:fly={{ y: 500, delay: 200 }}
   out:fly={{ y: 500, duration: 100 }}
 >
-  <h1 class="page-title">{$t.settings}</h1>
+  <h1 class="page-title">
+    <FadingElement name={$t.settings} />
+  </h1>
   <div class="settings">
-    <h2>{$t.language}</h2>
+    <h2><FadingElement name={$t.language} /></h2>
     <div class="input-group">
       <input type="radio" id="de" bind:group={$appLanguage} value={"de"} />
       <label for="de">Deutsch</label>
@@ -27,29 +30,33 @@
     <h2>Cookies</h2>
     <div class="input-group">
       <input type="checkbox" id="cookies" bind:checked={$ytCookiesAccepted} />
-      <label for="cookies"
-        >{$t.cookieCheckbox}<br />
-        {#if !$ytCookiesAccepted}
-          {$t.see} <a href="/privacy" class="link" use:link>{$t.privacy}</a>
-        {/if}
-      </label>
+      <FadingElement name={$t.cookieCheckbox}>
+        <label for="cookies"
+          >{$t.cookieCheckbox}<br />
+          {#if !$ytCookiesAccepted}
+            {$t.see} <a href="/privacy" class="link" use:link>{$t.privacy}</a>
+          {/if}
+        </label>
+      </FadingElement>
     </div>
   </div>
 
-  <button class="btn btn-close | rounded" on:click={() => pop()}
-    >{$t.saveAndClose}</button
-  >
+  <span style="place-self: center;">
+    <FadingElement name={$t.saveAndClose}>
+      <button class="btn btn-close | rounded" on:click={() => pop()}
+        >{$t.saveAndClose}</button
+      >
+    </FadingElement>
+  </span>
 </main>
 
 <style>
   main {
-    --align: start;
     position: relative;
   }
 
   .settings {
     min-height: 50vh;
-    align-self: flex-start;
   }
 
   h2 {
@@ -59,7 +66,7 @@
   }
 
   .input-group {
-    accent-color: var(--slate-400);
+    accent-color: var(--teal-400);
     margin-bottom: 0.25em;
   }
 
@@ -70,6 +77,5 @@
   .btn-close {
     width: fit-content;
     padding: 0.3em 1em;
-    margin: 3em auto 0 auto;
   }
 </style>

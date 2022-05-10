@@ -1,12 +1,9 @@
 <script lang="ts">
-  import { link } from "svelte-spa-router"
-  import {
-    ytCookiesAccepted,
-    appLanguage,
-    dictionary as t,
-  } from "../stores/settings"
+  import { appLanguage, dictionary as t } from "../stores/settings"
   import BasePage from "../components/BasePage.svelte"
-  import BannerCookies from "../components/BannerCookies.svelte"
+  import ButtonNav from "../components/ButtonNav.svelte"
+  import About from "./About.svelte"
+  // import BannerCookies from "../components/BannerCookies.svelte"
 
   const betaBadgeFill = "#018421"
 </script>
@@ -42,27 +39,31 @@
   </div>
 
   <div class="nav-grid | grid">
-    <a href="/game" class="btn-play | nav-button | rounded" use:link
-      >{$t.play}</a
-    >
-    <a href="/browse" class="btn-browse | nav-button | rounded" use:link
-      >{$t.browse}</a
-    >
-    <!-- <a href="/settings" class="btn-settings | nav-button | rounded" use:link
-        >{$t.settings}</a
-      > -->
-    <a href="/about" class="btn-about | nav-button | rounded" use:link
-      >{$t.about}</a
-    >
+    <ButtonNav
+      text={$t.play}
+      href={"/game"}
+      color={"var(--white)"}
+      bgColor={"var(--teal-400)"}
+    />
+
+    <ButtonNav
+      text={$t.browse}
+      href={"/browse"}
+      color={"var(--white)"}
+      bgColor={"var(--blue-400)"}
+    />
+
+    <ButtonNav text={$t.about} href={"/about"} />
   </div>
 
-  {#if $ytCookiesAccepted === null}
+  <!-- {#if $ytCookiesAccepted === null}
     <BannerCookies />
-  {/if}
+  {/if} -->
 </BasePage>
 
 <style>
-  .main-title {
+  .main-title,
+  .main-title > span {
     background-image: linear-gradient(
       -311deg,
       var(--teal-400) 30%,
@@ -71,6 +72,9 @@
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
+  }
+
+  .main-title {
     font-weight: 700;
     font-size: 300%;
     margin-bottom: 0.25em;
@@ -102,25 +106,6 @@
     margin: auto;
   }
 
-  .nav-button {
-    color: var(--white);
-    background-color: var(--teal-400);
-    padding: 0.5em 1em;
-    text-decoration: none;
-    font-size: 120%;
-    text-align: center;
-  }
-
-  .btn-browse {
-    background-color: var(--blue-400);
-  }
-
-  /* .btn-settings, */
-  .btn-about {
-    color: initial;
-    background-color: initial;
-  }
-
   .language-switch {
     place-self: center;
     margin-bottom: 1em;
@@ -129,6 +114,7 @@
 
   .language-switch > span {
     cursor: pointer;
+    transition: all 300ms;
   }
 
   .language-switch > span.bold {

@@ -19,7 +19,7 @@
     class="overlay | grid"
     style:place-content={centerContent ? "center" : ""}
     on:click={() => close()}
-    transition:fade={{ duration: 200 }}
+    transition:fade={{ duration: 250, delay: 250 }}
   >
     <div class="overlay-content | container | flex-col">
       <div class="headline | bold upper">
@@ -41,7 +41,6 @@
 
     .headline {
       font-size: 150%;
-      margin-bottom: 1em;
     }
   }
 

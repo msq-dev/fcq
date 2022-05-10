@@ -52,7 +52,7 @@
     "blueviolet",
     "saddlebrown",
     "tomato",
-    "fuchsia",
+    "navy",
   ]
 
   const cardSize = tweened(1)
@@ -158,7 +158,8 @@
   class:user-card={userClass}
   class:npc-card={npcClass}
   style="transform: scale({$cardSize}) translateX({$cardTranslationX}%) translateY({$cardTranslationY}%);"
-  in:fade={{ duration: 100 }}
+  in:fade={{ duration: 100, delay: 200 }}
+  out:fade={{ duration: 100, delay: 0 }}
   on:introstart={() => resetTweens()}
 >
   <div class="head-container | flex-between" style:color={categoryColor}>

@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte"
+  import { onMount } from "svelte"
   import { fade } from "svelte/transition"
   import { appLanguage, dictionary as t } from "../stores/settings"
   import {
-    game,
+    gameReady,
     decks,
     sessionRunning,
     gameRunning,
@@ -16,6 +16,7 @@
     statNpc,
     resetGame,
   } from "../stores/game"
+  import ScreenWaiting from "../components/ScreenWaiting.svelte"
   import Card from "../components/Card.svelte"
   import Overlay from "../components/Overlay.svelte"
   import OverlayStat from "../components/OverlayStat.svelte"
@@ -25,16 +26,16 @@
 
   let deck = []
   let showEvaluation: boolean
-  let userBegins: boolean = null
+  let userBegins: boolean
   let userWins: boolean
-  let userWinsGame: boolean = null
+  let userWinsGame: boolean
   let setupReady: Promise<boolean>
 
   $: isTurnComplete = $statUser !== null && $statNpc !== null
   $: isGameOver = userWinsGame !== null
 
   async function getGameReadyState() {
-    return await game.setup()
+    return await gameReady.setup()
   }
 
   function setupGame() {
@@ -186,10 +187,6 @@
       }
     }
   })
-
-  // onDestroy(() => {
-  //   resetGame()
-  // })
 </script>
 
 <main
@@ -197,16 +194,13 @@
   out:fade={{ duration: 100, delay: 0 }}
 >
   {#await setupReady}
-    <div class="waiting | flex-col">
-      <div style="font-size: 300%;">...</div>
-      <div>{$t.settingUp}</div>
-    </div>
+    <ScreenWaiting />
   {:then}
     <!-- START -->
     {#if !$gameRunning && !isGameOver}
       {#if !userBegins}
-        <div class="npc-start flex-col">
-          {$t.npcBegins}
+        <div class="npc-start flex-col" in:fade={{ delay: 200 }}>
+          <span style="font-size: 150%;">{$t.npcBegins}</span>
           <button class="btn | rounded" on:click={() => moveNpc()}>Start</button
           >
         </div>
@@ -281,15 +275,8 @@
 </main>
 
 <style>
-  .waiting {
-    --gap: 0.5em;
-
-    margin-top: 40%;
-    font-size: 150%;
-  }
-
   .npc-start {
-    margin-top: 40%;
+    margin-top: 30vmin;
     gap: 1em;
   }
 

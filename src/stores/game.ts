@@ -16,7 +16,7 @@ function createGameReadyState() {
   }
 }
 
-export const game = createGameReadyState()
+export const gameReady = createGameReadyState()
 export const sessionRunning = writable(false)
 export const gameRunning = writable(false)
 
@@ -32,7 +32,7 @@ export const currentCardUser = derived(deckUser, ($deckUser) => $deckUser[0])
 export const currentCardNpc = derived(deckNpc, ($deckNpc) => $deckNpc[0])
 
 export function resetGame() {
-  game.reset()
+  gameReady.reset()
   sessionRunning.set(false)
   gameRunning.set(false)
   deckUser.set([])

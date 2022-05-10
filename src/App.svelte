@@ -17,6 +17,7 @@
   import NotFound from "./routes/NotFound.svelte"
 
   import OverlayYoutube from "./components/OverlayYoutube.svelte"
+  import IconHome from "./components/IconHome.svelte"
   import IconSettings from "./components/IconSettings.svelte"
 
   const routes = {
@@ -41,7 +42,9 @@
     <nav class="shadow" transition:fade={{ duration: 100 }}>
       <div class="container">
         <div class="nav-links">
-          <a href="/" use:link use:active>Home</a>
+          <a href="/" use:link use:active>
+            <IconHome size={18} stroke={1.5} />
+          </a>
           <a href="/game" use:link use:active>{$t.play}</a>
           <a href="/browse" use:link use:active>{$t.browse}</a>
           <a href="/about" use:link use:active>{$t.about}</a>

@@ -28,12 +28,14 @@
   }
 </script>
 
-<div class="stat" class:disabled on:click={() => statClicked()}>
-  {#if stat.isAlive === true}
-    <span class="name" class:selected>{$t.currentAge}</span>
-  {:else}
-    <span class="name" class:selected>{$t[stat.name]}</span>
-  {/if}
+<div class="stat" class:disabled class:selected on:click={() => statClicked()}>
+  <span class="name">
+    {#if stat.isAlive === true}
+      {$t.currentAge}
+    {:else}
+      {$t[stat.name]}
+    {/if}
+  </span>
   <span class="value"
     >{stat.symbol || ""} {stat.value}{@html anniversaryInfo}</span
   >
@@ -47,6 +49,11 @@
     display: grid;
     grid-template-columns: 2fr 1fr;
     border-bottom: 1px dotted var(--gray-400);
+    transition: all 500ms;
+
+    .name {
+      margin-left: 0.25em;
+    }
 
     .value {
       text-align: right;
@@ -59,12 +66,16 @@
     }
 
     &.disabled {
-      opacity: 0.4;
+      opacity: 0.3;
     }
   }
 
   .selected {
-    animation: pulse 1s alternate infinite;
+    background-color: var(--slate-100);
+
+    > .name {
+      animation: pulse 2s alternate infinite;
+    }
   }
 
   @keyframes pulse {
@@ -76,6 +87,7 @@
   .abilities {
     grid-column: span 2;
     margin-top: -0.2em;
+    margin-left: 0.25em;
     line-height: 1.45em;
   }
 </style>

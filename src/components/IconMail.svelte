@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import BaseIcon from "./BaseIcon.svelte"
 </script>
 
