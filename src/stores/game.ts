@@ -24,6 +24,7 @@ export const decks: Writable<Deck> = writable({ en: [], de: [] })
 
 export const deckUser = writable([])
 export const deckNpc = writable([])
+export const cardsPlayed = writable([])
 export const statUser = writable(null)
 export const statNpc = writable(null)
 
@@ -36,6 +37,7 @@ export function resetGame() {
   gameRunning.set(false)
   deckUser.set([])
   deckNpc.set([])
+  cardsPlayed.set([])
   statUser.set(null)
   statNpc.set(null)
 }

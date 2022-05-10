@@ -9,6 +9,7 @@
     gameRunning,
     deckUser,
     deckNpc,
+    cardsPlayed,
     currentCardUser,
     currentCardNpc,
     statUser,
@@ -20,17 +21,13 @@
   import OverlayStat from "../components/OverlayStat.svelte"
   import OverlayGameOver from "../components/OverlayGameOver.svelte"
   import InfoBox from "../components/InfoBox.svelte"
-
-  import { shuffle } from "../utils/utils"
-
-  const cardsPerPlayer = $decks[$appLanguage].length / 2
+  import { shuffle, fetchData, makePlayingCards } from "../utils/utils"
 
   let deck = []
-  let cardsPlayed: ComposerCard[] = []
   let showEvaluation: boolean
-  let userBegins: boolean
+  let userBegins: boolean = null
   let userWins: boolean
-  let userWinsGame: boolean
+  let userWinsGame: boolean = null
   let setupReady: Promise<boolean>
 
   $: isTurnComplete = $statUser !== null && $statNpc !== null
@@ -44,9 +41,14 @@
     resetGame()
 
     deck = shuffle(Array.from($decks[$appLanguage]))
-    cardsPlayed = []
+    $cardsPlayed = []
 
-    for (let i = 0; i < cardsPerPlayer; i++) {
+    // for (let i = 0; i < 1; i++) {
+    //   $deckUser = [...$deckUser, deck.pop()]
+    // }
+    // $deckNpc = [...$deckNpc, deck.pop()]
+
+    for (let i = 0; i < $decks[$appLanguage].length / 2; i++) {
       $deckUser = [...$deckUser, deck.pop()]
     }
     $deckNpc = deck
@@ -66,7 +68,7 @@
   }
 
   function playCard(deck: ComposerCard[]) {
-    cardsPlayed.push(deck[0])
+    $cardsPlayed = [...$cardsPlayed, deck[0]]
   }
 
   function moveNpc() {
@@ -120,13 +122,13 @@
   function endTurn() {
     if (userWins) {
       userBegins = true
-      $deckUser = [...$deckUser, ...cardsPlayed]
+      $deckUser = [...$deckUser, ...$cardsPlayed]
     } else {
       userBegins = false
-      $deckNpc = [...$deckNpc, ...cardsPlayed]
+      $deckNpc = [...$deckNpc, ...$cardsPlayed]
     }
 
-    cardsPlayed = []
+    $cardsPlayed = []
     userWins = null
 
     setupNextTurn()
@@ -170,12 +172,24 @@
   }
 
   onMount(() => {
-    setupGame()
+    if (!$gameRunning) {
+      if (!$decks[$appLanguage].length) {
+        fetchData($appLanguage)
+          .then((data: ComposerCard[]) => {
+            $decks[$appLanguage] = makePlayingCards(data)
+          })
+          .then(() => {
+            setupGame()
+          })
+      } else {
+        setupGame()
+      }
+    }
   })
 
-  onDestroy(() => {
-    resetGame()
-  })
+  // onDestroy(() => {
+  //   resetGame()
+  // })
 </script>
 
 <main
@@ -200,6 +214,7 @@
         <Overlay
           active={!$gameRunning}
           btnText="Start"
+          centerContent
           on:close={() => {
             $gameRunning = true
             startTurn()
@@ -222,7 +237,7 @@
       on:close={() => handleEvaluation()}
     >
       <span slot="headline">
-        {#if $statUser.value === $statNpc.value}
+        {#if $statUser?.value === $statNpc?.value}
           {$t.draw}
         {:else}
           {userWins ? $t.youWin : $t.youLose}
@@ -231,23 +246,27 @@
       <span slot="body">
         <OverlayStat
           cardName={$currentCardNpc.name}
+          cardImg={$currentCardNpc.imageUrl}
           stat={$statNpc}
           winner={!userWins}
         />
         <OverlayStat
           cardName={$currentCardUser.name}
+          cardImg={$currentCardUser.imageUrl}
           stat={$statUser}
           winner={userWins}
         />
       </span>
     </Overlay>
 
-    {#if ($gameRunning || userBegins) && userWinsGame === null}
-      <InfoBox />
-      <div class="table | grid">
-        <Card {...$currentCardUser} on:statPlayed={() => moveUser()} />
-        <!-- <Card {...$currentCardNpc} /> -->
-      </div>
+    {#if $currentCardUser}
+      {#if ($gameRunning || userBegins) && userWinsGame === null}
+        <InfoBox />
+        <div class="table | grid">
+          <Card {...$currentCardUser} on:statPlayed={() => moveUser()} />
+          <!-- <Card {...$currentCardNpc} /> -->
+        </div>
+      {/if}
     {/if}
 
     <!-- END -->

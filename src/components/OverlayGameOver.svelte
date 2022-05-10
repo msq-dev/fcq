@@ -2,7 +2,7 @@
   import { createEventDispatcher } from "svelte"
   import { fade } from "svelte/transition"
   import { link } from "svelte-spa-router"
-  import { dictionary as t } from "../stores/settings"
+  import { appLanguage, dictionary as t } from "../stores/settings"
   import Confetti from "./Confetti.svelte"
 
   export let active: boolean
@@ -20,15 +20,26 @@
     {#if userWinsGame}
       <Confetti />
     {/if}
-    <div class="overlay-content | container flex-col">
+    <div class="overlay-content | container">
       <div class="headline | bold upper">
         {userWinsGame ? $t.youWin : $t.youLose}
       </div>
       <div class="body | flex-col">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor iusto
-        quibusdam quam nemo in consequuntur ratione sed blanditiis rerum quos,
-        voluptatum molestias eum fuga minus! Exercitationem distinctio
-        reprehenderit soluta sed?
+        {#if $appLanguage === "de"}
+          <p>
+            Wow, what a ride! We hope you had fun and gained knowledge about the
+            wonderful and uncharted territory that is the world of female
+            composers, both present and past.
+          </p>
+          <p>Möchten Sie eine weitere Runde spielen?</p>
+        {:else}
+          <p>
+            Wow, what a ride! We hope you had fun and gained knowledge about the
+            wonderful and uncharted territory that is the world of female
+            composers, both present and past.
+          </p>
+          <p>Do you wish to play another round?</p>
+        {/if}
       </div>
 
       <div class="button-group | flex-between">
@@ -50,13 +61,20 @@
   }
 
   .overlay-content {
-    --max-width: 80%;
-
     place-self: center;
     z-index: 10;
 
     .headline {
+      place-self: center;
       font-size: 150%;
     }
+
+    .body {
+      --align: start;
+    }
+  }
+
+  .button-group {
+    margin-top: 1em;
   }
 </style>

@@ -1,5 +1,6 @@
 <script>
-  import { fade } from "svelte/transition"
+  import { appLanguage, dictionary as t } from "../stores/settings"
+  import BasePage from "../components/BasePage.svelte"
 
   const currentYear = new Date().getFullYear()
 
@@ -10,16 +11,23 @@
   }`
 </script>
 
-<main class="container" transition:fade={{ duration: 100, delay: 100 }}>
+<BasePage>
   <div class="title-block">
-    <h1 class="page-title">Impressum</h1>
+    {#if $appLanguage === "de"}
+      <h1 class="page-title">Über uns/Impressum</h1>
+    {:else}
+      <h1 class="page-title">About</h1>
+    {/if}
     <h2 class="subtitle">FCQ &mdash; Female Composers Quartets</h2>
   </div>
   <div class="company-block">
     <div class="title | bold">rost<span class="gray">ling</span></div>
     <div>Henrike Rost & Max Spuling</div>
-    <a href="https://rostling.de/" class="link">rostling.de</a>
-    <a href="mailto:kontakt@rostling.de" class="link">kontakt@rostling.de</a>
+    <address>
+      Nogatstraße 31 <br />12051 Berlin
+      <a href="mailto:kontakt@rostling.de" class="link">kontakt@rostling.de</a>
+      <a href="https://rostling.de/" class="link">rostling.de</a>
+    </address>
   </div>
   <div class="btn-container">
     <a
@@ -39,29 +47,47 @@
     >
   </div>
   <div class="text-block">
-    <p>
-      Wenn Sie unsere Arbeit an FCQ (Female Composers Quartets) unterstützen
-      wollen, freuen wir uns.
-    </p>
-    <p>
-      FCQ (Female Composers Quartets) versteht sich als „Work in Progress“. Wir
-      sind uns bewusst, dass die vorliegende subjektive Auswahl kleinere und
-      größere Lücken enthält, die der Freude am Entdecken und Spielen sicher
-      keinen Abbruch tun. Anregungen zu Optimierungen und Hinweise auf Fehler
-      sind jederzeit willkommen.
-    </p>
-    <p>
-      Die App ist aus dem reichen online verfügbaren Informationsangebot
-      hervorgegangen, dessen intensivere Erkundung wir anregen wollen.
-      Ausdrücklich empfehlen möchten wir:
-    </p>
+    {#if $appLanguage === "de"}
+      <p>
+        Wenn Sie unsere Arbeit an FCQ (Female Composers Quartets) unterstützen
+        wollen, freuen wir uns.
+      </p>
+      <p>
+        FCQ (Female Composers Quartets) versteht sich als „Work in Progress“.
+        Wir sind uns bewusst, dass die vorliegende subjektive Auswahl kleinere
+        und größere Lücken enthält, die der Freude am Entdecken und Spielen
+        sicher keinen Abbruch tun. Anregungen zu Optimierungen und Hinweise auf
+        Fehler sind jederzeit willkommen.
+      </p>
+      <p>
+        Die App ist aus dem reichen online verfügbaren Informationsangebot
+        hervorgegangen, dessen intensivere Erkundung wir anregen wollen.
+        Ausdrücklich empfehlen möchten wir:
+      </p>
+    {:else}
+      <p>
+        If you would like to support our work on FCQ (Female Composers
+        Quartets), we would be delighted.
+      </p>
+      <p>
+        FCQ (Female Composers Quartets) sees itself as a "work in progress". We
+        are aware that the present selection contains smaller and larger gaps,
+        which certainly do not detract from the joy of discovering and playing.
+        Suggestions for optimisations and tips on errors are always welcome.
+      </p>
+      <p>
+        The app has emerged from the wealth of information available online,
+        which we would like to encourage you to explore more intensively. We
+        would like to expressly recommend:
+      </p>
+    {/if}
   </div>
   <div class="source-block | container">
     <div class="source">
       <p>MUGI. Musik(vermittlung) und Gender(forschung) im Internet</p>
       <p>
-        Hg. von Beatrix Borchard und Nina Noeske (Hochschule für Musik und
-        Theater Hamburg 2003ff.)
+        {$t.editedBy} Beatrix Borchard {$t.and} Nina Noeske (Hochschule für Musik
+        und Theater Hamburg 2003ff.)
       </p>
       <a href="https://mugi.hfmt-hamburg.de" class="link"
         >https://mugi.hfmt-hamburg.de</a
@@ -69,7 +95,7 @@
     </div>
     <div class="source">
       <p>Instrumentalistinnen-Lexikon des Sophie Drinker Instituts</p>
-      <p>Hg. von Freia Hoffmann</p>
+      <p>{$t.editedBy} Freia Hoffmann</p>
       <a href="https://www.sophie-drinker-institut.de/lexikon" class="link"
         >https://www.sophie-drinker-institut.de/lexikon</a
       >
@@ -78,34 +104,63 @@
       <p>
         Online-Fembio-Datenbank des Instituts für Frauen-Biographieforschung
       </p>
-      <p>Hg. von Luise F. Pusch</p>
+      <p>{$t.editedBy} Luise F. Pusch</p>
       <a href="https://www.fembio.org/" class="link">https://www.fembio.org/</a>
     </div>
     <div class="source">
-      <p>
-        Wikipedia-Seiten zu Komponistinnen (in ihrer Aktualität nicht zu
-        unterschätzen)
-      </p>
+      {#if $appLanguage === "de"}
+        <p>
+          Wikipedia-Seiten zu Komponistinnen (in ihrer Aktualität nicht zu
+          unterschätzen)
+        </p>
+      {:else}
+        <p>
+          Wikipedia articles on female composers (not to be underestimated in
+          their topicality)
+        </p>
+      {/if}
     </div>
   </div>
   <div class="text-block">
-    <p>
-      Fast alle verwendeten Abbildungen sind gemeinfrei und stammen von
-      Wikipedia. Ausgenommen sind die Bilder von Sofia Gubaidulina (July 1981,
-      Sortavala &copy; Dmitri N. Smirnov) sowie von Florence Price, Ruth Gipps,
-      Kaija Saariaho, Unsuk Chin, Olga Neuwirth und Isabel Mundry. Für letztere
-      Bilder verlinken wir auf andere Websites.
-    </p>
-    <p>
-      Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter
-      oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum
-      Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft.
-      Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar.
-    </p>
-    <p>
-      Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch
-      ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar.
-    </p>
+    <h3 class="legal">{$t.legalNotice}</h3>
+    {#if $appLanguage === "de"}
+      <p>
+        Fast alle verwendeten Abbildungen sind gemeinfrei und stammen von
+        Wikipedia. Ausgenommen sind die Bilder von Sofia Gubaidulina (July 1981,
+        Sortavala &copy; Dmitri N. Smirnov) sowie von Florence Price, Ruth
+        Gipps, Kaija Saariaho, Unsuk Chin, Olga Neuwirth und Isabel Mundry. Für
+        letztere Bilder verlinken wir auf andere Websites.
+      </p>
+      <p>
+        Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter
+        oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden
+        zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft.
+        Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht
+        erkennbar.
+      </p>
+      <p>
+        Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch
+        ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar.
+      </p>
+    {:else}
+      <p>
+        Almost all the images used are in the public domain and come from
+        Wikipedia. Exceptions are the images of Sofia Gubaidulina (July 1981,
+        Sortavala &copy; Dmitri N. Smirnov) as well as of Florence Price, Ruth
+        Gipps, Kaija Saariaho, Unsuk Chin, Olga Neuwirth and Isabel Mundry. For
+        the latter images we link to other websites.
+      </p>
+      <p>
+        The respective provider or operator of the sites is always responsible
+        for the content of the linked sites. The linked pages were checked for
+        possible legal violations at the time of linking. Illegal contents were
+        not recognisable at the time of linking.
+      </p>
+      <p>
+        However, permanent monitoring of the content of the linked pages is not
+        reasonable without concrete indications of a legal violation.
+      </p>
+    {/if}
     <p>
       Icons: <a href="https://feathericons.com/" class="link">Feather</a>
       made by
@@ -113,12 +168,11 @@
     </p>
   </div>
   <div class="copyright">{@html copyright} rostling</div>
-</main>
+</BasePage>
 
 <style lang="scss">
-  main {
-    --vertical-rhythm: 1em;
-    margin-bottom: 10vh;
+  address {
+    font-style: normal;
   }
 
   .subtitle {
@@ -161,6 +215,10 @@
       font-weight: var(--fw-bold);
       margin-bottom: 0.25em;
     }
+  }
+
+  .legal {
+    text-transform: uppercase;
   }
 
   .copyright {

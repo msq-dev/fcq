@@ -7,11 +7,11 @@
   <div class="info-box">
     <span
       >Computer: {$deckNpc.length}
-      {$t.card}{$deckNpc.length > 1 ? $t.cardPlural : ""}</span
+      {$t.card}{$deckNpc.length !== 1 ? $t.cardPlural : ""}</span
     >
     <span
       >User: {$deckUser.length}
-      {$t.card}{$deckUser.length > 1 ? $t.cardPlural : ""}</span
+      {$t.card}{$deckUser.length !== 1 ? $t.cardPlural : ""}</span
     >
   </div>
 </div>

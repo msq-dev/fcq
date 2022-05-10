@@ -6,9 +6,7 @@
 </script>
 
 <a href="/browse/{catIndex}" class="btn-category | shadow rounded" use:link>
-  <span class="fit-text" style="--text-length: {catName.length};"
-    >{catName}</span
-  >
+  <span>{catName}</span>
 </a>
 
 <style>
@@ -17,6 +15,7 @@
 
     padding: 0.5em 0;
     color: currentColor;
+    font-size: 90%;
     text-align: center;
     text-decoration: none;
     background-color: var(--slate-100);

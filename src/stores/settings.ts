@@ -1,14 +1,23 @@
-import { writable, derived, Writable } from "svelte/store"
+import { writable, derived } from "svelte/store"
 import { dict } from "../assets/dict"
 
-// const storedCookiePreference = JSON.parse(localStorage.acceptCookies)
-// export const ytCookiesAccepted = writable(storedCookiePreference || null)
-// ytCookiesAccepted.subscribe((value) => (localStorage.acceptCookies = value))
+const storedCookiePreference = getCookiePreference()
+export const ytCookiesAccepted = writable(storedCookiePreference)
+ytCookiesAccepted.subscribe((value) => (localStorage.acceptCookies = value))
 
-export const ytCookiesAccepted = writable(false)
+const preferredLanguage = localStorage.language
+export const appLanguage = writable(preferredLanguage || "de")
+appLanguage.subscribe((lang) => (localStorage.language = lang))
 
-export const appLanguage: Writable<string> = writable("de")
 export const dictionary = derived(
   appLanguage,
   ($appLanguage) => dict[$appLanguage]
 )
+
+function getCookiePreference() {
+  try {
+    return JSON.parse(localStorage.acceptCookies)
+  } catch {
+    return false
+  }
+}

@@ -166,7 +166,7 @@
     <div class="index | small">{index}</div>
   </div>
   <div class="names-container">
-    <div class="name | fit-text" style="--text-length: {name.length};">
+    <div class="name | fit-text" style="--text-length: {name?.length};">
       {name}
     </div>
     {#if nameMaiden}
@@ -190,8 +190,8 @@
     {/if}
   </div>
   <div class="portrait-container" on:click={() => showYoutubeOverlay()}>
-    <img loading="lazy" class="portrait" {src} alt={$t.portraitOf + name} />
-    <img loading="lazy" class="bg-portrait" {src} alt={$t.portraitOf + name} />
+    <img class="portrait" {src} alt={$t.portraitOf + name} />
+    <img class="bg-portrait" {src} alt={$t.portraitOf + name} />
     {#if ytId}
       <div class="yt-icon">
         <IconSpeaker size={30} />

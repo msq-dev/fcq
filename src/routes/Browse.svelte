@@ -1,10 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import { fade } from "svelte/transition"
   import { appLanguage, dictionary as t } from "../stores/settings"
   import { decks } from "../stores/game"
+  import BasePage from "../components/BasePage.svelte"
   import ButtonCategory from "../components/ButtonCategory.svelte"
   import PageCategory from "../components/PageCategory.svelte"
+  import { fetchData, makePlayingCards } from "../utils/utils"
 
   export let params: Record<string, string> = {}
 
@@ -22,17 +23,23 @@
   }
 
   onMount(() => {
-    categories = getCategories($decks[$appLanguage])
+    if (!$decks[$appLanguage].length) {
+      fetchData($appLanguage)
+        .then((data: ComposerCard[]) => {
+          $decks[$appLanguage] = makePlayingCards(data)
+        })
+        .then(() => {
+          categories = getCategories($decks[$appLanguage])
+        })
+    } else {
+      categories = getCategories($decks[$appLanguage])
+    }
   })
 </script>
 
-<main
-  class="container"
-  in:fade={{ duration: 100, delay: 200 }}
-  out:fade={{ duration: 100, delay: 0 }}
->
+<BasePage>
   {#if !params.cat}
-    <h1 class="page-title">{$t.categories}</h1>
+    <h1>{$t.categories}</h1>
     <div class="category-grid | grid">
       {#each categories as cat}
         <ButtonCategory {...cat} />
@@ -41,21 +48,12 @@
   {:else}
     <PageCategory cat={params.cat} />
   {/if}
-</main>
+</BasePage>
 
 <style>
-  main {
-    margin: 3vh auto 20vh auto;
-  }
-
-  .page-title {
-    margin-bottom: 0.5em;
-  }
-
   .category-grid {
-    --min: 15ch;
-
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--min)), 1fr));
-    grid-auto-rows: 1fr;
+    gap: 0.5em;
+    width: min(90%, 20rem);
+    margin: 0.75em auto;
   }
 </style>

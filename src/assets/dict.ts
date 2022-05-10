@@ -45,6 +45,9 @@ export const dict: Dictionary = {
     settingUp: "Setting up game",
     about: "About",
     bapt: "bapt.",
+    editedBy: "Ed. by",
+    and: "and",
+    legalNotice: "Legal notice",
   },
   de: {
     languageCode: "de-DE",
@@ -90,7 +93,10 @@ export const dict: Dictionary = {
     yesPlease: "Aber gern",
     noThanks: "Nein, danke",
     settingUp: "Lade Spiel",
-    about: "About",
+    about: "Über uns",
     bapt: "get.",
+    editedBy: "Hg. von",
+    and: "und",
+    legalNotice: "Rechtshinweis",
   },
 }

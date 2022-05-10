@@ -1,8 +1,19 @@
 <script>
+  /**
+   * Confetti-Component courtesy of https://svelte.dev/tutorial/congratulations
+   */
+
   import { onMount } from "svelte"
 
-  let characters = ["✨"]
-  // let characters = ["🥳", "🎉", "✨"]
+  let characters = [
+    "&#x22C6;",
+    "&#x2605;",
+    "&#x2606;",
+    "&#x2736;",
+    "&#x2730;",
+    "&#x2738;",
+    "&#x2739;",
+  ]
 
   let confetti = new Array(50)
     .fill()
@@ -36,8 +47,10 @@
 </script>
 
 {#each confetti as c}
-  <span style="left: {c.x}%; top: {c.y}%; transform: scale({c.r})"
-    >{c.character}</span
+  <span
+    class="shadow"
+    style="left: {c.x}%; top: {c.y}%; transform: scale({c.r})"
+    >{@html c.character}</span
   >
 {/each}
 
@@ -46,5 +59,6 @@
     position: absolute;
     font-size: 5vw;
     user-select: none;
+    color: gold;
   }
 </style>
