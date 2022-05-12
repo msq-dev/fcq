@@ -209,6 +209,10 @@ main.container {
   font-weight: var(--fw-bold);
 }
 
+.normal {
+  font-weight: var(--fw-normal);
+}
+
 .italic {
   font-style: italic;
 }

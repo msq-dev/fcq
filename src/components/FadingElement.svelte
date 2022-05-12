@@ -1,23 +1,22 @@
 <script>
-  import { fade } from "svelte/transition"
-  import { cubicOut } from "svelte/easing"
+  import { fade } from "svelte/transition";
 
-  export let name = ""
-  export let duration = 200
+  export let name = "";
+  export let duration = 200;
 
-  let transitioning = false
-  $: change(name)
+  let transitioning = false;
+  $: change(name);
 
   function change() {
-    transitioning = true
+    transitioning = true;
     setTimeout(() => {
-      transitioning = false
-    }, duration)
+      transitioning = false;
+    }, duration);
   }
 </script>
 
 {#if !transitioning}
-  <span transition:fade={{ duration, easing: cubicOut }}>
+  <span transition:fade={{ duration }}>
     <slot>{name}</slot>
   </span>
 {/if}

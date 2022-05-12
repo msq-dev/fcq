@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte"
-  import { fade } from "svelte/transition"
-  import { link } from "svelte-spa-router"
-  import { appLanguage, dictionary as t } from "../stores/settings"
-  import Confetti from "./Confetti.svelte"
+  import { createEventDispatcher } from "svelte";
+  import { fade } from "svelte/transition";
+  import { link } from "svelte-spa-router";
+  import { appLanguage, dictionary as t } from "../stores/settings";
+  import Confetti from "./Confetti.svelte";
 
-  export let active: boolean
-  export let userWinsGame: boolean
+  export let active: boolean;
+  export let userWinsGame: boolean;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
   function playAgain() {
-    dispatch("reset")
+    dispatch("reset");
   }
 </script>
 
@@ -27,29 +27,25 @@
       <div class="body | flex-col">
         {#if $appLanguage === "de"}
           <p>
-            Wow, what a ride! We hope you had fun and gained knowledge about the
-            wonderful and uncharted territory that is the world of female
-            composers, both present and past.
+            Wir hoffen, Sie hatten Spaß mit dem Spiel und wissen nun mehr über
+            Komponistinnen – in Vergangenheit und Gegenwart.
           </p>
-          <p>Möchten Sie eine weitere Runde spielen?</p>
+          <p>Haben Sie Lust auf eine weitere Runde?</p>
         {:else}
           <p>
-            Wow, what a ride! We hope you had fun and gained knowledge about the
-            wonderful and uncharted territory that is the world of female
+            We hope you enjoyed the game and gained knowledge about female
             composers, both present and past.
           </p>
-          <p>Do you wish to play another round?</p>
+          <p>Do you fancy another round?</p>
         {/if}
       </div>
 
       <div class="button-group | flex-between">
         <a href="/" class="btn btn-reject | rounded shadow" use:link
-          >{$t.noThanks}</a
-        >
+          >{$t.noThanks}</a>
         <button
           class="btn btn-accept | rounded shadow"
-          on:click={() => playAgain()}>{$t.yesPlease}</button
-        >
+          on:click={() => playAgain()}>{$t.yesPlease}</button>
       </div>
     </div>
   </div>

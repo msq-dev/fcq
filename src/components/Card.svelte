@@ -1,48 +1,48 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from "svelte"
-  import { fade } from "svelte/transition"
-  import { tweened } from "svelte/motion"
-  import { cubicInOut } from "svelte/easing"
-  import { sessionRunning, gameRunning, statUser } from "../stores/game"
-  import { dictionary as t } from "../stores/settings"
+  import { createEventDispatcher, onMount } from "svelte";
+  import { fade } from "svelte/transition";
+  import { tweened } from "svelte/motion";
+  import { cubicInOut } from "svelte/easing";
+  import { sessionRunning, gameRunning, statUser } from "../stores/game";
+  import { dictionary as t } from "../stores/settings";
   import {
     showOverlay,
     videoId,
     videoTitle,
     videoDesc,
     composerName,
-  } from "../stores/youtube"
+  } from "../stores/youtube";
 
-  import CardStat from "./CardStat.svelte"
-  import IconSpeaker from "./IconSpeaker.svelte"
+  import CardStat from "./CardStat.svelte";
+  import IconSpeaker from "./IconSpeaker.svelte";
 
-  import { checkIfImageExists } from "../utils/utils"
+  import { checkIfImageExists } from "../utils/utils";
 
-  export let index = ""
-  export let category = ""
-  export let name = ""
-  export let nameMaiden = ""
-  export let dateOfBirth = ""
-  export let birthIsBaptized = ""
-  export let dateOfDeath = ""
-  export let dateDeathOverride = ""
-  export let placeOfBirth = ""
-  export let placeOfDeath = ""
-  export let imageUrl = ""
-  export let stats: Stat[] = []
+  export let index = "";
+  export let category = "";
+  export let name = "";
+  export let nameMaiden = "";
+  export let dateOfBirth = "";
+  export let birthIsBaptized = "";
+  export let dateOfDeath = "";
+  export let dateDeathOverride = "";
+  export let placeOfBirth = "";
+  export let placeOfDeath = "";
+  export let imageUrl = "";
+  export let stats: Stat[] = [];
 
-  export let ytId = ""
-  export let ytTitle = ""
-  export let ytDesc = ""
+  export let ytId = "";
+  export let ytTitle = "";
+  export let ytDesc = "";
 
-  export let shadow = true
-  export let isUserCard = false
-  export let isGameCard = false
-  export let isTurnComplete = false
+  export let shadow = true;
+  export let isUserCard = false;
+  export let isGameCard = false;
+  export let isTurnComplete = false;
 
-  const dispatch = createEventDispatcher()
+  const dispatch = createEventDispatcher();
 
-  const IMG_BASE_URL = "https://apps.maxspuling.de/assets/fcq/img/"
+  const IMG_BASE_URL = "https://apps.maxspuling.de/assets/fcq/img/";
   const colors = [
     "darkgreen",
     "crimson",
@@ -53,102 +53,102 @@
     "saddlebrown",
     "tomato",
     "navy",
-  ]
+  ];
 
-  const cardSize = tweened(1)
-  const cardTranslationX = tweened(0)
-  const cardTranslationY = tweened(0)
+  const cardSize = tweened(1);
+  const cardTranslationX = tweened(0);
+  const cardTranslationY = tweened(0);
 
-  let imgExists = false
-  let switchClass = false
+  let imgExists = false;
+  let switchClass = false;
 
-  $: categoryColor = colors[parseInt(index[0]) - 1]
-  $: birthday = formatDate(dateOfBirth)
-  $: deathday = dateDeathOverride || formatDate(dateOfDeath)
-  $: isTurnComplete ? animateCards() : null
+  $: categoryColor = colors[parseInt(index[0]) - 1];
+  $: birthday = formatDate(dateOfBirth);
+  $: deathday = dateDeathOverride || formatDate(dateOfDeath);
+  $: isTurnComplete ? animateCards() : null;
 
-  $: userClass = isGameCard && isUserCard
-  $: npcClass = isGameCard && !isUserCard
+  $: userClass = isGameCard && isUserCard;
+  $: npcClass = isGameCard && !isUserCard;
 
-  $: srcUrl = /^https?/.test(imageUrl) ? imageUrl : IMG_BASE_URL + imageUrl
-  $: src = imgExists ? srcUrl : IMG_BASE_URL + "fcq_placeholder.jpg"
+  $: srcUrl = /^https?/.test(imageUrl) ? imageUrl : IMG_BASE_URL + imageUrl;
+  $: src = imgExists ? srcUrl : IMG_BASE_URL + "fcq_placeholder.jpg";
 
   function animateCards() {
-    let translation
+    let translation;
     const shmoov = {
       duration: 1000,
       easing: cubicInOut,
-    }
+    };
     cardSize
       .set(0.73, {
         duration: 500,
       })
       .then(() => {
-        translation = isUserCard ? -100 : 100
+        translation = isUserCard ? -100 : 100;
         cardTranslationX
           .set(translation, shmoov)
           .then(() => {
-            translation = isUserCard ? 37 : -37
-            switchClass = !switchClass
-            cardTranslationX.set(translation, shmoov)
-            cardTranslationY.set(translation, shmoov)
+            translation = isUserCard ? 37 : -37;
+            switchClass = !switchClass;
+            cardTranslationX.set(translation, shmoov);
+            cardTranslationY.set(translation, shmoov);
           })
           .then(() => {
-            emitAnimationEnd()
-          })
-      })
+            emitAnimationEnd();
+          });
+      });
   }
 
   function formatDate(date: string) {
-    const day = new Date(date)
+    const day = new Date(date);
     const dateOptions: any = {
       year: "numeric",
       month: "long",
       day: "numeric",
-    }
-    return day.toLocaleDateString($t.languageCode, dateOptions)
+    };
+    return day.toLocaleDateString($t.languageCode, dateOptions);
   }
 
   function emitAnimationEnd() {
     setTimeout(() => {
-      dispatch("animationEnd")
-    }, 1500)
+      dispatch("animationEnd");
+    }, 1500);
   }
 
   function resetTweens() {
-    cardTranslationX.set(0, { duration: 0 })
-    cardTranslationY.set(0, { duration: 0 })
-    cardSize.set(1, { duration: 0 })
-    switchClass = false
+    cardTranslationX.set(0, { duration: 0 });
+    cardTranslationY.set(0, { duration: 0 });
+    cardSize.set(1, { duration: 0 });
+    switchClass = false;
   }
 
   function playStat(s: Stat) {
-    if (!$sessionRunning || $statUser !== null) return
-    if (!$gameRunning) $gameRunning = true
+    if (!$sessionRunning || $statUser !== null) return;
+    if (!$gameRunning) $gameRunning = true;
 
-    $statUser = s
-    dispatch("statPlayed")
+    $statUser = s;
+    dispatch("statPlayed");
   }
 
   function showYoutubeOverlay() {
-    if (!ytId) return
+    if (!ytId) return;
 
-    $showOverlay = true
-    $videoId = ytId
-    $videoTitle = ytTitle
-    $videoDesc = ytDesc
-    $composerName = name
+    $showOverlay = true;
+    $videoId = ytId;
+    $videoTitle = ytTitle;
+    $videoDesc = ytDesc;
+    $composerName = name;
   }
 
   onMount(() => {
     checkIfImageExists(srcUrl, (exists: boolean) => {
       if (exists) {
-        imgExists = true
+        imgExists = true;
       } else {
-        imgExists = false
+        imgExists = false;
       }
-    })
-  })
+    });
+  });
 </script>
 
 <div
@@ -160,8 +160,7 @@
   style="transform: scale({$cardSize}) translateX({$cardTranslationX}%) translateY({$cardTranslationY}%);"
   in:fade={{ duration: 100, delay: 200 }}
   out:fade={{ duration: 100, delay: 0 }}
-  on:introstart={() => resetTweens()}
->
+  on:introstart={() => resetTweens()}>
   <div class="head-container | flex-between" style:color={categoryColor}>
     <div class="category | small">{category}</div>
     <div class="index | small">{index}</div>
@@ -178,8 +177,8 @@
     <div class="date birth">
       {#if birthIsBaptized}
         <sup
-          ><span class="small">(</span>&lowast;<span class="small">)</span></sup
-        >
+          ><span class="small">(</span>&lowast;<span class="small">)</span
+          ></sup>
         {$t.bapt}
       {:else}
         <sup>&lowast;</sup>
@@ -243,7 +242,7 @@
   }
 
   .name {
-    --scale: 18.5;
+    --scale: 18;
     font-weight: var(--fw-bold);
   }
 

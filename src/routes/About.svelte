@@ -1,14 +1,14 @@
 <script>
-  import { appLanguage, dictionary as t } from "../stores/settings"
-  import BasePage from "../components/BasePage.svelte"
+  import { appLanguage, dictionary as t } from "../stores/settings";
+  import BasePage from "../components/BasePage.svelte";
 
-  const currentYear = new Date().getFullYear()
+  const currentYear = new Date().getFullYear();
 
   $: copyright = `&copy;&#x200A;${
     currentYear !== 2022
       ? "2022&#x200A;&ndash;&#x200A;" + currentYear
       : currentYear
-  }`
+  }`;
 </script>
 
 <BasePage>
@@ -35,16 +35,13 @@
       class="kofi-button"
       style="background-color:#29abe0;"
       href="https://ko-fi.com/O5O2CGWA4"
-      target="_blank"
-    >
+      target="_blank">
       <span class="kofitext"
         ><img
           src="https://storage.ko-fi.com/cdn/cup-border.png"
           alt="Ko-fi donations"
-          class="kofiimg"
-        />Support us on Ko-fi</span
-      ></a
-    >
+          class="kofiimg" />Support us on Ko-fi</span
+      ></a>
   </div>
   <div class="text-block">
     {#if $appLanguage === "de"}
@@ -90,15 +87,13 @@
         und Theater Hamburg 2003ff.)
       </p>
       <a href="https://mugi.hfmt-hamburg.de" class="link"
-        >https://mugi.hfmt-hamburg.de</a
-      >
+        >https://mugi.hfmt-hamburg.de</a>
     </div>
     <div class="source">
       <p>Instrumentalistinnen-Lexikon des Sophie Drinker Instituts</p>
       <p>{$t.editedBy} Freia Hoffmann</p>
       <a href="https://www.sophie-drinker-institut.de/lexikon" class="link"
-        >https://www.sophie-drinker-institut.de/lexikon</a
-      >
+        >https://www.sophie-drinker-institut.de/lexikon</a>
     </div>
     <div class="source">
       <p>
@@ -110,13 +105,13 @@
     <div class="source">
       {#if $appLanguage === "de"}
         <p>
-          Wikipedia-Seiten zu Komponistinnen (in ihrer Aktualität nicht zu
-          unterschätzen)
+          Wikipedia-Seiten zu Komponistinnen <span class="normal"
+            >(in ihrer Aktualität nicht zu unterschätzen)</span>
         </p>
       {:else}
         <p>
-          Wikipedia articles on female composers (not to be underestimated in
-          their topicality)
+          Wikipedia articles on female composers <span class="normal"
+            >(not to be underestimated in their topicality)</span>
         </p>
       {/if}
     </div>
