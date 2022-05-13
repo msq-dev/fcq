@@ -26,11 +26,6 @@ export function checkIfImageExists(url: string, callback: Function) {
   }
 }
 
-export function fetchData(lang: string) {
-  const DATA_URL = `https://apps.maxspuling.de/assets/fcq/data/composers_${lang}.csv`
-  return csv(DATA_URL)
-}
-
 // courtesy of https://stackoverflow.com/a/21984136
 function calculateAge(birthday: string, deathday: string) {
   const dateOfBirth = new Date(birthday)
@@ -41,6 +36,11 @@ function calculateAge(birthday: string, deathday: string) {
   const ageDate = new Date(ageDifference)
 
   return Math.abs(ageDate.getUTCFullYear() - 1970)
+}
+
+export function fetchData(lang: string) {
+  const DATA_URL = `https://apps.maxspuling.de/assets/fcq/data/composers_${lang}.csv`
+  return csv(DATA_URL)
 }
 
 export function makePlayingCards(data: ComposerCard[]) {
@@ -89,7 +89,7 @@ export function makePlayingCards(data: ComposerCard[]) {
       category: composer.category,
       name: composer.name,
       nameMaiden: composer.nameMaiden,
-      imageUrl: composer.imageUrl || "fcq_placeholder.jpg",
+      imageUrl: composer.imageUrl,
       dateOfBirth: composer.dateOfBirth || null,
       birthIsBaptized: composer.birthIsBaptized,
       placeOfBirth: composer.placeOfBirth,
@@ -102,4 +102,14 @@ export function makePlayingCards(data: ComposerCard[]) {
     })
   })
   return playingCards
+}
+
+export function formatDate(date: string, languageCode: string) {
+  const day = new Date(date)
+  const dateOptions: any = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }
+  return day.toLocaleDateString(languageCode, dateOptions)
 }

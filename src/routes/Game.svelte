@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { fade } from "svelte/transition";
-  import { appLanguage, dictionary as t } from "../stores/settings";
+  import { onMount } from "svelte"
+  import { fade } from "svelte/transition"
+  import { appLanguage, dictionary as t } from "../stores/settings"
   import {
     gameReady,
     decks,
     sessionRunning,
     gameRunning,
+    showEvaluation,
     deckUser,
     deckNpc,
     cardsPlayed,
@@ -15,34 +16,36 @@
     statUser,
     statNpc,
     resetGame,
-  } from "../stores/game";
-  import ScreenWaiting from "../components/ScreenWaiting.svelte";
-  import Card from "../components/Card.svelte";
-  import Overlay from "../components/Overlay.svelte";
-  import OverlayStat from "../components/OverlayStat.svelte";
-  import OverlayGameOver from "../components/OverlayGameOver.svelte";
-  import InfoBox from "../components/InfoBox.svelte";
-  import { shuffle, fetchData, makePlayingCards } from "../utils/utils";
+  } from "../stores/game"
+  import ScreenWaiting from "../components/ScreenWaiting.svelte"
+  import Modal from "../components/Modal.svelte"
+  import BaseImage from "../components/BaseImage.svelte"
+  import Card from "../components/Card.svelte"
+  import CardName from "../components/CardName.svelte"
+  import OverlayGameOver from "../components/OverlayGameOver.svelte"
+  import SingleCard from "../components/SingleCard.svelte"
+  import InfoBox from "../components/InfoBox.svelte"
+  import { shuffle, fetchData, makePlayingCards } from "../utils/utils"
+  import CardStat from "../components/CardStat.svelte"
 
-  let deck = [];
-  let showEvaluation: boolean;
-  let userBegins: boolean = null;
-  let userWins: boolean = null;
-  let userWinsGame: boolean = null;
-  let setupReady: Promise<boolean>;
+  let deck = []
+  let userBegins: boolean = null
+  let userWins: boolean = null
+  let userWinsGame: boolean = null
+  let setupReady: Promise<boolean>
+  let showNpcCard = false
 
-  $: isTurnComplete = $statUser !== null && $statNpc !== null;
-  $: isGameOver = userWinsGame !== null;
+  $: isGameOver = userWinsGame !== null
 
   async function getGameReadyState() {
-    return await gameReady.setup();
+    return await gameReady.setup()
   }
 
   function setupGame() {
-    resetGame();
+    resetGame()
 
-    deck = shuffle(Array.from($decks[$appLanguage]));
-    $cardsPlayed = [];
+    deck = shuffle(Array.from($decks[$appLanguage]))
+    $cardsPlayed = []
 
     // for (let i = 0; i < 1; i++) {
     //   $deckUser = [...$deckUser, deck.pop()]
@@ -50,162 +53,167 @@
     // $deckNpc = [...$deckNpc, deck.pop()]
 
     for (let i = 0; i < $decks[$appLanguage].length / 2; i++) {
-      $deckUser = [...$deckUser, deck.pop()];
+      $deckUser = [...$deckUser, deck.pop()]
     }
-    $deckNpc = deck;
+    $deckNpc = deck
 
-    userBegins = null;
-    userWins = null;
-    userWinsGame = null;
+    userBegins = null
+    userWinsGame = null
 
-    $sessionRunning = true;
-    setupReady = getGameReadyState();
-    userBegins = Math.round(Math.random()) ? true : false;
+    $sessionRunning = true
+    setupReady = getGameReadyState()
+    userBegins = Math.round(Math.random()) ? true : false
   }
 
   function startTurn() {
-    playCard($deckNpc);
-    playCard($deckUser);
+    if (!$gameRunning) {
+      $gameRunning = true
+    }
+    playCard($deckNpc)
+    playCard($deckUser)
   }
 
-  function playCard(deck: ComposerCard[]) {
-    $cardsPlayed = [...$cardsPlayed, deck[0]];
+  function playCard(playerDeck: ComposerCard[]) {
+    $cardsPlayed = [...$cardsPlayed, playerDeck[0]]
   }
 
   function moveNpc() {
     if (!$gameRunning) {
-      $gameRunning = true;
-      startTurn();
+      $gameRunning = true
+      startTurn()
     }
-    const statIdx = Math.floor(Math.random() * $currentCardNpc.stats.length);
+    const statIdx = Math.floor(Math.random() * $currentCardNpc.stats.length)
 
     setTimeout(() => {
-      $statNpc = $currentCardNpc.stats[statIdx];
-    }, 500);
+      $statNpc = $currentCardNpc.stats[statIdx]
+    }, 500)
   }
 
   function moveUser() {
     if ($statNpc === null) {
       $statNpc = $currentCardNpc.stats.find(
         (s: Stat) => s.name === $statUser.name
-      );
+      )
     }
-    evaluateTurn();
-    showEvaluation = true;
+    evaluateTurn()
+    $showEvaluation = true
   }
 
   function evaluateTurn() {
     if ($statUser.isAlive && !$statNpc.isAlive) {
-      userWins = true;
-      return;
+      userWins = true
+      return
     } else if (!$statUser.isAlive && $statNpc.isAlive) {
-      userWins = false;
-      return;
+      userWins = false
+      return
     }
 
-    if ($statUser.value === $statNpc.value) return;
+    if ($statUser.value === $statNpc.value) return
 
     if (
       $statUser.highestWins
         ? $statUser.value > $statNpc.value
         : $statUser.value < $statNpc.value
     ) {
-      userWins = true;
+      userWins = true
     } else {
-      userWins = false;
+      userWins = false
     }
   }
 
   function handleDraw() {
-    setupNextTurn();
+    setupNextTurn()
   }
 
   function endTurn() {
     if (userWins) {
-      userBegins = true;
-      $deckUser = [...$deckUser, ...$cardsPlayed];
+      userBegins = true
+      $deckUser = [...$deckUser, ...$cardsPlayed]
     } else {
-      userBegins = false;
-      $deckNpc = [...$deckNpc, ...$cardsPlayed];
+      userBegins = false
+      $deckNpc = [...$deckNpc, ...$cardsPlayed]
     }
 
-    $cardsPlayed = [];
-    userWins = null;
+    $cardsPlayed = []
+    userWins = null
 
-    setupNextTurn();
+    setupNextTurn()
   }
 
   function setupNextTurn() {
-    $deckUser = [...$deckUser.slice(1, $deckUser.length)];
-    $deckNpc = [...$deckNpc.slice(1, $deckNpc.length)];
+    $deckUser = [...$deckUser.slice(1, $deckUser.length)]
+    $deckNpc = [...$deckNpc.slice(1, $deckNpc.length)]
 
     if (!$deckUser.length || !$deckNpc.length) {
-      handleGameOver();
-      return;
+      handleGameOver()
+      return
     }
 
-    $statUser = null;
-    $statNpc = null;
+    $statUser = null
+    $statNpc = null
 
-    startTurn();
+    startTurn()
 
     if (!userBegins) {
-      moveNpc();
+      moveNpc()
     }
   }
 
   function handleEvaluation() {
-    showEvaluation = false;
+    $showEvaluation = false
     if ($statUser.value === $statNpc.value) {
-      handleDraw();
-      return;
+      handleDraw()
+      return
     }
-    endTurn();
+    endTurn()
   }
 
   function handleGameOver() {
-    userWinsGame = $deckUser.length ? true : false;
-    $gameRunning = false;
+    userWinsGame = $deckUser.length ? true : false
+    $gameRunning = false
   }
 
   function handleReset() {
-    setupGame();
+    setupGame()
   }
 
   function matchCards(card: ComposerCard) {
     return $decks[$appLanguage].find(
       (deckCard) => deckCard.index === card.index
-    );
+    )
   }
 
   function handleLanguageChange() {
     if (!$sessionRunning) {
-      setupGame();
+      setupGame()
     } else {
-      $cardsPlayed = [...$cardsPlayed.map((c) => matchCards(c))];
-      $deckNpc = [...$deckNpc.map((c) => matchCards(c))];
-      $deckUser = [...$deckUser.map((c) => matchCards(c))];
+      $cardsPlayed = [...$cardsPlayed.map((c) => matchCards(c))]
+      $deckNpc = [...$deckNpc.map((c) => matchCards(c))]
+      $deckUser = [...$deckUser.map((c) => matchCards(c))]
     }
   }
 
   onMount(() => {
-    if (!$decks[$appLanguage].length) {
-      fetchData($appLanguage)
-        .then((data: ComposerCard[]) => {
-          $decks[$appLanguage] = makePlayingCards(data);
-        })
-        .then(() => {
-          handleLanguageChange();
-        });
-    } else {
-      handleLanguageChange();
+    if (!$showEvaluation) {
+      if (!$decks[$appLanguage].length) {
+        fetchData($appLanguage)
+          .then((data: ComposerCard[]) => {
+            $decks[$appLanguage] = makePlayingCards(data)
+          })
+          .then(() => {
+            handleLanguageChange()
+          })
+      } else {
+        handleLanguageChange()
+      }
     }
-  });
+  })
 </script>
 
 <main
   in:fade={{ duration: 100, delay: 200 }}
-  out:fade={{ duration: 100, delay: 0 }}>
+  out:fade={{ duration: 100, delay: 0 }}
+>
   {#await setupReady}
     <ScreenWaiting />
   {:then}
@@ -214,71 +222,89 @@
       {#if !userBegins}
         <div class="npc-start flex-col" in:fade={{ delay: 200 }}>
           <span style="font-size: 150%;">{$t.npcBegins}</span>
-          <button class="btn | rounded" on:click={() => moveNpc()}
-            >Start</button>
+          <button class="btn | rounded" on:click={() => moveNpc()}>Start</button
+          >
         </div>
       {:else}
-        <Overlay
+        <Modal
           active={!$gameRunning}
           btnText="Start"
-          centerContent
           on:close={() => {
-            $gameRunning = true;
-            startTurn();
-          }}>
-          <span slot="headline">
+            startTurn()
+          }}
+        >
+          <svelte:fragment slot="title">
             {$t.welcome}
-          </span>
-          <span slot="body">
+          </svelte:fragment>
+          <svelte:fragment slot="body">
             {$t.chooseCat}
-          </span>
-        </Overlay>
+          </svelte:fragment>
+        </Modal>
       {/if}
     {/if}
 
     <!-- GAME -->
-    <Overlay
-      active={showEvaluation}
+    {#if $currentCardUser}
+      {#if ($gameRunning || userBegins) && userWinsGame === null}
+        <InfoBox />
+        <div class="table | grid">
+          <Card {...$currentCardUser} shadow on:statPlayed={() => moveUser()} />
+        </div>
+      {/if}
+    {/if}
+
+    <Modal
+      active={$showEvaluation}
       btnText={$t.continue}
-      on:close={() => handleEvaluation()}>
-      <span slot="headline">
+      on:close={() => handleEvaluation()}
+    >
+      <svelte:fragment slot="title">
         {#if $statUser?.value === $statNpc?.value}
           {$t.draw}
         {:else}
           {userWins ? $t.youWin : $t.youLose}
         {/if}
-      </span>
-      <span slot="body">
-        <OverlayStat
-          cardName={$currentCardNpc.name}
-          cardImg={$currentCardNpc.imageUrl}
-          stat={$statNpc}
-          winner={!userWins} />
-        <OverlayStat
-          cardName={$currentCardUser.name}
-          cardImg={$currentCardUser.imageUrl}
-          stat={$statUser}
-          winner={userWins} />
-      </span>
-    </Overlay>
+      </svelte:fragment>
+      <svelte:fragment slot="body">
+        <BaseImage
+          imageUrl={$currentCardNpc.imageUrl}
+          circle
+          winner={!userWins}
+        />
+        <button
+          class="btn btn-check-her | small rounded"
+          on:click|self|stopPropagation={() => (showNpcCard = true)}
+          >{$t.checkHerOut}</button
+        >
+        <CardName name={$currentCardNpc.name} />
+        <CardStat stat={$statNpc} single />
 
-    {#if $currentCardUser}
-      {#if ($gameRunning || userBegins) && userWinsGame === null}
-        <InfoBox />
-        <div class="table | grid">
-          <Card {...$currentCardUser} on:statPlayed={() => moveUser()} />
-          <!-- <Card {...$currentCardNpc} /> -->
-        </div>
-      {/if}
-    {/if}
+        <div style="height: 2rem;" />
+
+        <BaseImage
+          imageUrl={$currentCardUser.imageUrl}
+          circle
+          winner={userWins}
+        />
+        <CardName name={$currentCardUser.name} />
+        <CardStat stat={$statUser} single />
+
+        <SingleCard
+          active={showNpcCard}
+          card={$currentCardNpc}
+          on:close={() => (showNpcCard = false)}
+        />
+      </svelte:fragment>
+    </Modal>
 
     <!-- END -->
     <OverlayGameOver
       active={userWinsGame !== null}
       {userWinsGame}
       on:reset={() => {
-        handleReset();
-      }} />
+        handleReset()
+      }}
+    />
   {/await}
 </main>
 
@@ -291,5 +317,13 @@
   .table {
     position: relative;
     place-items: center;
+  }
+
+  .btn-check-her {
+    align-self: center;
+    font-weight: var(--fw-bold);
+    color: var(--white);
+    background-color: var(--blue-400);
+    margin-bottom: 0.5em;
   }
 </style>

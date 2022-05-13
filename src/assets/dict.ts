@@ -48,6 +48,7 @@ export const dict: Dictionary = {
     editedBy: "Ed. by",
     and: "and",
     legalNotice: "Legal notice",
+    checkHerOut: "Check her out!",
   },
   de: {
     languageCode: "de-DE",
@@ -98,5 +99,6 @@ export const dict: Dictionary = {
     editedBy: "Hg. von",
     and: "und",
     legalNotice: "Rechtshinweis",
+    checkHerOut: "Check her out!",
   },
 }

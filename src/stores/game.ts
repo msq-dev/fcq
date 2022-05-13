@@ -19,6 +19,7 @@ function createGameReadyState() {
 export const gameReady = createGameReadyState()
 export const sessionRunning = writable(false)
 export const gameRunning = writable(false)
+export const showEvaluation = writable(false)
 
 export const decks: Writable<Deck> = writable({ en: [], de: [] })
 
@@ -33,6 +34,7 @@ export const currentCardNpc = derived(deckNpc, ($deckNpc) => $deckNpc[0])
 
 export function resetGame() {
   gameReady.reset()
+  showEvaluation.set(false)
   sessionRunning.set(false)
   gameRunning.set(false)
   deckUser.set([])

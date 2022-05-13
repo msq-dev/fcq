@@ -1,34 +1,41 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
-  import { statNpc, sessionRunning } from "../stores/game";
-  import { dictionary as t } from "../stores/settings";
+  import { createEventDispatcher } from "svelte"
+  import { statNpc, sessionRunning } from "../stores/game"
+  import { dictionary as t } from "../stores/settings"
 
-  export let stat: Stat;
+  export let stat: Stat
+  export let disabled = false
+  export let selected = false
+  export let single = false
 
-  $: disabled = $statNpc !== null && $t[$statNpc.name] !== $t[stat.name];
-  $: selected = $statNpc !== null && $t[$statNpc.name] === $t[stat.name];
   $: anniversaryInfo = stat.anniversaryInfo
     ? calculateAnniversary(stat.anniversaryInfo)
-    : "";
+    : ""
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher()
 
   function statClicked() {
-    if (disabled || !$sessionRunning) return;
-    dispatch("statClicked");
+    if (disabled || !$sessionRunning) return
+    dispatch("statClicked")
   }
 
   function calculateAnniversary(a: AnniversaryInfo) {
-    const upcomingYear = a.anniversaryYear;
+    const upcomingYear = a.anniversaryYear
     const anniversary = a.isBirth
       ? "&ast;&thinsp;" + String(upcomingYear - a.yearOfBirth)
-      : "&dagger;&thinsp;" + String(upcomingYear - a.yearOfDeath);
+      : "&dagger;&thinsp;" + String(upcomingYear - a.yearOfDeath)
 
-    return `<span class="small" style="margin-left: 0.5em;">(${anniversary})</span>`;
+    return `<span class="small" style="margin-left: 0.5em;">(${anniversary})</span>`
   }
 </script>
 
-<div class="stat" class:disabled class:selected on:click={() => statClicked()}>
+<div
+  class="stat"
+  class:disabled
+  class:selected
+  class:single
+  on:click={() => statClicked()}
+>
   <span class="name">
     {#if stat.isAlive === true}
       {$t.currentAge}
@@ -37,7 +44,8 @@
     {/if}
   </span>
   <span class="value"
-    >{stat.symbol || ""} {stat.value}{@html anniversaryInfo}</span>
+    >{stat.symbol || ""} {stat.value}{@html anniversaryInfo}</span
+  >
   {#if stat.abilitiesInfo}
     <span class="abilities | small">{stat.abilitiesInfo}</span>
   {/if}
@@ -47,6 +55,8 @@
   .stat {
     display: grid;
     grid-template-columns: max-content 1fr;
+    column-gap: 0.25em;
+    width: 100%;
     border-bottom: 1px dotted var(--gray-400);
     transition: all 500ms;
 
@@ -57,10 +67,15 @@
     .value {
       text-align: right;
       margin-right: 0.5em;
-      color: var(--slate-400);
+      font-weight: var(--fw-bold);
     }
 
-    &:last-of-type {
+    &:not(.single) .value {
+      color: var(--slate-400);
+      font-weight: var(--fw-normal);
+    }
+
+    &:not(.single):last-child {
       border: none;
       margin-bottom: 1.5em;
     }

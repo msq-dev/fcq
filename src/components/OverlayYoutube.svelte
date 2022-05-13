@@ -65,7 +65,7 @@
     inset: 0;
     width: 100%;
     height: 100%;
-    z-index: 50;
+    z-index: 500;
     color: var(--white);
     background-color: rgb(0 0 0 / 0.95);
     overflow-y: scroll;
@@ -78,7 +78,8 @@
   }
 
   .name {
-    --scale: 18.5;
+    --scale: 18;
+    font-size: 90%;
     font-weight: var(--fw-bold);
   }
 
