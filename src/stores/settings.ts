@@ -14,6 +14,10 @@ export const dictionary = derived(
   ($appLanguage) => dict[$appLanguage]
 )
 
+export const locales = derived(appLanguage, ($appLanguage) =>
+  $appLanguage === "de" ? "de-DE" : "en-GB"
+)
+
 function getCookiePreference() {
   try {
     return JSON.parse(localStorage.acceptCookies)

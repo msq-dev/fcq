@@ -266,16 +266,17 @@
         {/if}
       </svelte:fragment>
       <svelte:fragment slot="body">
-        <BaseImage
-          imageUrl={$currentCardNpc.imageUrl}
-          circle
-          winner={!userWins}
-        />
-        <button
-          class="btn btn-check-her | small rounded"
-          on:click|self|stopPropagation={() => (showNpcCard = true)}
-          >{$t.checkHerOut}</button
+        <span
+          class="check-her-out"
+          data-text={$t.checkHerOut}
+          on:click|stopPropagation={() => (showNpcCard = true)}
         >
+          <BaseImage
+            imageUrl={$currentCardNpc.imageUrl}
+            circle
+            winner={!userWins}
+          />
+        </span>
         <CardName name={$currentCardNpc.name} />
         <CardStat stat={$statNpc} single />
 
@@ -319,11 +320,31 @@
     place-items: center;
   }
 
-  .btn-check-her {
+  .check-her-out {
+    position: relative;
     align-self: center;
+  }
+
+  .check-her-out::before {
+    content: attr(data-text);
+    position: absolute;
+    left: -180%;
+    top: 0;
+    width: 200%;
+    font-size: 80%;
     font-weight: var(--fw-bold);
-    color: var(--white);
-    background-color: var(--blue-400);
-    margin-bottom: 0.5em;
+    color: var(--blue-300);
+    transform: rotate(-15deg);
+  }
+
+  .check-her-out::after {
+    content: "";
+    position: absolute;
+    left: -185%;
+    top: -45%;
+    width: 240%;
+    height: 240%;
+    background-repeat: no-repeat;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' viewBox='0 0 800 800'%3E%3Cg stroke-width='20' stroke='hsl(201, 72%25, 55%25)' fill='none' stroke-linecap='round' stroke-linejoin='round' transform='rotate(343, 400, 400)'%3E%3Cpath d='M335.52071380615234 314.3020248413086Q243.52071380615234 540.3020248413086 489.52071380615234 468.3020248413086 ' marker-end='url(%23SvgjsMarker1448)'%3E%3C/path%3E%3C/g%3E%3Cdefs%3E%3Cmarker markerWidth='6' markerHeight='6' refX='3' refY='3' viewBox='0 0 6 6' orient='auto' id='SvgjsMarker1448'%3E%3Cpolyline points='0,3 3,1.5 0,0' fill='none' stroke-width='1' stroke='hsl(201, 72%25, 55%25)' stroke-linecap='round' transform='matrix(1,0,0,1,1,1.5)' stroke-linejoin='round'%3E%3C/polyline%3E%3C/marker%3E%3C/defs%3E%3C/svg%3E");
   }
 </style>

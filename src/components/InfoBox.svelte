@@ -1,7 +1,15 @@
 <script>
   import { fade } from "svelte/transition"
-  import { deckNpc, deckUser } from "../stores/game"
+  import {
+    deckNpc,
+    deckUser,
+    statNpc,
+    statUser,
+    cardsPlayed,
+  } from "../stores/game"
   import { dictionary as t } from "../stores/settings"
+
+  $: itsADraw = false
 </script>
 
 <div
@@ -14,6 +22,11 @@
       >Computer: {$deckNpc.length}
       {$t.card}{$deckNpc.length !== 1 ? $t.cardPlural : ""}</span
     >
+    {#if itsADraw}
+      <span>
+        Cards up for grabs: {$cardsPlayed.length}
+      </span>
+    {/if}
     <span
       >User: {$deckUser.length}
       {$t.card}{$deckUser.length !== 1 ? $t.cardPlural : ""}</span

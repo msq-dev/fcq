@@ -4,10 +4,10 @@
   import { decks } from "../stores/game"
   import Card from "./Card.svelte"
 
-  export let cat: string
+  export let quat: string
 
-  $: cardsInCat = $decks[$appLanguage].filter(
-    (card: ComposerCard) => card.index[0] === cat
+  $: cardsInQuartet = $decks[$appLanguage].filter(
+    (card: ComposerCard) => card.index[0] === quat
   )
 </script>
 
@@ -15,7 +15,7 @@
   class="cards-container | full-bleed"
   transition:fade={{ duration: 100, delay: 100 }}
 >
-  {#each cardsInCat as card}
+  {#each cardsInQuartet as card}
     <Card {...card} shadow={false} />
   {/each}
 </div>

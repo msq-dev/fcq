@@ -5,12 +5,12 @@
   export let catName = ""
 </script>
 
-<a href="/browse/{catIndex}" class="btn-category | shadow rounded" use:link>
+<a href="/browse/{catIndex}" class="btn-quartet | shadow rounded" use:link>
   <span>{catName}</span>
 </a>
 
 <style>
-  .btn-category {
+  .btn-quartet {
     --shadow-size: 0.5rem;
 
     padding: 0.5em 0;

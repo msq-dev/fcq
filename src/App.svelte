@@ -13,6 +13,7 @@
   import Browse from "./routes/Browse.svelte"
   import Settings from "./routes/Settings.svelte"
   import About from "./routes/About.svelte"
+  import Rules from "./routes/Rules.svelte"
   import Privacy from "./routes/Privacy.svelte"
   import NotFound from "./routes/NotFound.svelte"
 
@@ -23,9 +24,10 @@
   const routes = {
     "/": Home,
     "/game": Game,
-    "/browse/:cat?": Browse,
+    "/browse/:quat?": Browse,
     "/settings": Settings,
     "/about": About,
+    "/rules": Rules,
     "/privacy": Privacy,
     "*": NotFound,
   }

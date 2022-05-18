@@ -112,7 +112,8 @@
 
 <style>
   .card {
-    --size-portrait: min(40%, 22rem);
+    /* --size-portrait: min(40%, 22rem); */
+    --size-portrait: 11rem;
     --align: start;
     --gap: 0;
 

@@ -17,7 +17,7 @@
 {#if active}
   <div class="single-card" transition:fade>
     <Card {...card} singleCard />
-    <button class="btn btn-back | rounded shadow" on:click={() => goBack()}
+    <button class="btn btn-back | rounded" on:click={() => goBack()}
       >{$t.goBack}</button
     >
   </div>
@@ -25,19 +25,18 @@
 
 <style>
   .single-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
     position: absolute;
     inset: 0;
     z-index: 250;
-    display: grid;
-    place-items: center;
-    background-color: var(--slate-200);
+    padding-top: 0.5em;
+    background-color: rgb(0 0 0 / var(--opacity, 0.88));
   }
 
   .btn-back {
-    position: absolute;
-    bottom: 1em;
-    right: 1em;
-    background-color: var(--teal-400);
-    color: var(--white);
+    color: var(--gray-900);
   }
 </style>
