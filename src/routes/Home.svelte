@@ -1,112 +1,69 @@
 <script lang="ts">
-  import { appLanguage, dictionary as t } from "../stores/settings"
+  import {
+    onboardingComplete,
+    appLanguage,
+    dictionary as t,
+  } from "../stores/settings"
+  import Onboarding from "../components/Onboarding.svelte"
   import BasePage from "../components/BasePage.svelte"
+  import TitleMain from "../components/TitleMain.svelte"
   import ButtonNav from "../components/ButtonNav.svelte"
   import IconRules from "../components/IconRules.svelte"
   // import BannerCookies from "../components/BannerCookies.svelte"
-
-  const betaBadgeFill = "#018421"
 </script>
 
-<BasePage>
-  <h1 class="main-title | bold">
-    Female<br />Composers<br /><span
-      >Quartets
+{#if !$onboardingComplete}
+  <Onboarding />
+{:else}
+  <BasePage>
+    <TitleMain />
+    <div class="language-switch">
+      <span
+        class:bold={$appLanguage === "de"}
+        on:click={() => ($appLanguage = "de")}>DE</span
+      >
+      |
+      <span
+        class:bold={$appLanguage === "en"}
+        on:click={() => ($appLanguage = "en")}>EN</span
+      >
+    </div>
 
-      <svg viewBox="0 0 211 211" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M105.5 0L121.595 24.5842L145.873 8.03071L151.335 36.9029L180.1 30.9002L174.097 59.6649L202.969 65.1269L186.416 89.4049L211 105.5L186.416 121.595L202.969 145.873L174.097 151.335L180.1 180.1L151.335 174.097L145.873 202.969L121.595 186.416L105.5 211L89.4049 186.416L65.1269 202.969L59.6649 174.097L30.9002 180.1L36.9029 151.335L8.03071 145.873L24.5842 121.595L0 105.5L24.5842 89.4049L8.03071 65.1269L36.9029 59.6649L30.9002 30.9002L59.6649 36.9029L65.1269 8.03071L89.4049 24.5842L105.5 0Z"
-          fill={betaBadgeFill}
-        />
-        <path
-          d="M47.7826 121C47.4233 121 47.1293 120.886 46.9006 120.657C46.672 120.428 46.5576 120.134 46.5576 119.775V87.925C46.5576 87.5657 46.672 87.2717 46.9006 87.043C47.1293 86.8143 47.4233 86.7 47.7826 86.7H62.3356C65.047 86.7 67.2683 87.092 68.9996 87.876C70.731 88.66 72.005 89.7707 72.8216 91.208C73.671 92.6453 74.0956 94.3277 74.0956 96.255C74.0956 97.4637 73.867 98.5253 73.4096 99.44C72.985 100.355 72.446 101.106 71.7926 101.694C71.172 102.282 70.5676 102.723 69.9796 103.017C71.2536 103.605 72.3643 104.585 73.3116 105.957C74.2916 107.296 74.7816 108.897 74.7816 110.759C74.7816 112.817 74.3243 114.614 73.4096 116.149C72.495 117.684 71.1393 118.877 69.3426 119.726C67.546 120.575 65.3573 121 62.7766 121H47.7826ZM54.3486 115.267H61.8456C63.4463 115.267 64.655 114.826 65.4716 113.944C66.2883 113.029 66.6966 111.951 66.6966 110.71C66.6966 109.436 66.272 108.374 65.4226 107.525C64.606 106.643 63.4136 106.202 61.8456 106.202H54.3486V115.267ZM54.3486 100.567H61.4046C62.94 100.567 64.0833 100.191 64.8346 99.44C65.6186 98.656 66.0106 97.6597 66.0106 96.451C66.0106 95.2423 65.6186 94.2787 64.8346 93.56C64.0833 92.8087 62.94 92.433 61.4046 92.433H54.3486V100.567ZM81.853 121C81.4936 121 81.1996 120.886 80.971 120.657C80.7423 120.428 80.628 120.134 80.628 119.775V87.925C80.628 87.5657 80.7423 87.2717 80.971 87.043C81.1996 86.8143 81.4936 86.7 81.853 86.7H104.05C104.409 86.7 104.703 86.8143 104.932 87.043C105.161 87.2717 105.275 87.5657 105.275 87.925V91.845C105.275 92.1717 105.161 92.4493 104.932 92.678C104.703 92.9067 104.409 93.021 104.05 93.021H88.174V100.714H102.972C103.331 100.714 103.625 100.828 103.854 101.057C104.083 101.286 104.197 101.58 104.197 101.939V105.565C104.197 105.892 104.083 106.169 103.854 106.398C103.625 106.627 103.331 106.741 102.972 106.741H88.174V114.679H104.442C104.801 114.679 105.095 114.793 105.324 115.022C105.553 115.251 105.667 115.545 105.667 115.904V119.775C105.667 120.134 105.553 120.428 105.324 120.657C105.095 120.886 104.801 121 104.442 121H81.853ZM120.263 121C119.904 121 119.61 120.886 119.381 120.657C119.153 120.428 119.038 120.134 119.038 119.775V93.511H110.12C109.794 93.511 109.516 93.3967 109.287 93.168C109.059 92.9393 108.944 92.6617 108.944 92.335V87.925C108.944 87.5657 109.059 87.2717 109.287 87.043C109.516 86.8143 109.794 86.7 110.12 86.7H135.796C136.156 86.7 136.45 86.8143 136.678 87.043C136.907 87.2717 137.021 87.5657 137.021 87.925V92.335C137.021 92.6617 136.907 92.9393 136.678 93.168C136.45 93.3967 136.156 93.511 135.796 93.511H126.927V119.775C126.927 120.134 126.813 120.428 126.584 120.657C126.356 120.886 126.062 121 125.702 121H120.263ZM136.184 121C135.89 121 135.645 120.902 135.449 120.706C135.253 120.477 135.155 120.232 135.155 119.971C135.155 119.808 135.172 119.661 135.204 119.53L146.866 88.023C146.964 87.6637 147.16 87.3533 147.454 87.092C147.748 86.8307 148.157 86.7 148.679 86.7H154.951C155.474 86.7 155.882 86.8307 156.176 87.092C156.47 87.3533 156.666 87.6637 156.764 88.023L168.426 119.53C168.459 119.661 168.475 119.808 168.475 119.971C168.475 120.232 168.377 120.477 168.181 120.706C167.985 120.902 167.74 121 167.446 121H162.35C161.86 121 161.501 120.886 161.272 120.657C161.044 120.428 160.897 120.216 160.831 120.02L158.724 114.532H144.906L142.799 120.02C142.734 120.216 142.587 120.428 142.358 120.657C142.13 120.886 141.77 121 141.28 121H136.184ZM146.719 108.211H156.862L151.815 94.099L146.719 108.211Z"
-          fill="white"
-        />
-      </svg>
-    </span>
-  </h1>
+    <div class="nav-grid | grid">
+      <ButtonNav
+        text={$t.play}
+        href={"/game"}
+        color={"var(--white)"}
+        bgColor={"var(--teal-400)"}
+        col={"1 / 5"}
+        row={1}
+      />
 
-  <div class="language-switch">
-    <span
-      class:bold={$appLanguage === "de"}
-      on:click={() => ($appLanguage = "de")}>DE</span
-    >
-    |
-    <span
-      class:bold={$appLanguage === "en"}
-      on:click={() => ($appLanguage = "en")}>EN</span
-    >
-  </div>
+      <ButtonNav
+        href={"/rules"}
+        color={"var(--white)"}
+        bgColor={"var(--teal-300)"}
+        col={"5"}
+        row={1}
+      >
+        <IconRules />
+      </ButtonNav>
 
-  <div class="nav-grid | grid">
-    <ButtonNav
-      text={$t.play}
-      href={"/game"}
-      color={"var(--white)"}
-      bgColor={"var(--teal-400)"}
-      col={"1 / 5"}
-      row={1}
-    />
+      <ButtonNav
+        text={$t.browse}
+        href={"/browse"}
+        color={"var(--white)"}
+        bgColor={"var(--blue-400)"}
+        col={"1 / 6"}
+        row={2}
+      />
 
-    <ButtonNav
-      href={"/rules"}
-      color={"var(--white)"}
-      bgColor={"var(--teal-300)"}
-      col={"5"}
-      row={1}
-    >
-      <IconRules />
-    </ButtonNav>
-
-    <ButtonNav
-      text={$t.browse}
-      href={"/browse"}
-      color={"var(--white)"}
-      bgColor={"var(--blue-400)"}
-      col={"1 / 6"}
-      row={2}
-    />
-
-    <ButtonNav text={$t.about} href={"/about"} col={"1 / 6"} row={3} />
-  </div>
-</BasePage>
+      <ButtonNav text={$t.about} href={"/about"} col={"1 / 6"} row={3} />
+    </div>
+  </BasePage>
+{/if}
 
 <style>
-  .main-title,
-  .main-title > span {
-    background-image: linear-gradient(
-      -311deg,
-      var(--teal-400) 30%,
-      #128b96 100%
-    );
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-  }
-
-  .main-title {
-    font-weight: 700;
-    font-size: 300%;
-    margin-bottom: 0.25em;
-    text-align: center;
-    align-self: start;
-  }
-
-  .main-title > span {
-    position: relative;
-  }
-
-  .main-title > span > svg {
-    --size: 3.5rem;
-    position: absolute;
-    width: var(--size);
-    height: var(--size);
-    top: -18%;
-    left: 98%;
-    transform: rotate(15deg);
-    filter: drop-shadow(0 0 0.25rem rgba(0, 0, 0, 0.3));
-  }
-
   .nav-grid {
     grid-template-columns: repeat(5, minmax(1fr, 10%));
     grid-template-rows: repeat(3, 1fr);

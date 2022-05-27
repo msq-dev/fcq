@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
-  import { fade } from "svelte/transition";
-  import { link } from "svelte-spa-router";
-  import { appLanguage, dictionary as t } from "../stores/settings";
-  import Confetti from "./Confetti.svelte";
+  import { createEventDispatcher } from "svelte"
+  import { fade } from "svelte/transition"
+  import { link } from "svelte-spa-router"
+  import { appLanguage, dictionary as t } from "../stores/settings"
+  import Confetti from "./Confetti.svelte"
 
-  export let active: boolean;
-  export let userWinsGame: boolean;
+  export let active: boolean
+  export let userWinsGame: boolean
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher()
 
   function playAgain() {
-    dispatch("reset");
+    dispatch("reset")
   }
 </script>
 
@@ -42,32 +42,40 @@
 
       <div class="button-group | flex-between">
         <a href="/" class="btn btn-reject | rounded shadow" use:link
-          >{$t.noThanks}</a>
+          >{$t.noThanks}</a
+        >
         <button
           class="btn btn-accept | rounded shadow"
-          on:click={() => playAgain()}>{$t.yesPlease}</button>
+          on:click={() => playAgain()}>{$t.yesPlease}</button
+        >
       </div>
     </div>
   </div>
 {/if}
 
-<style lang="scss">
+<style>
   .overlay {
     overflow: hidden;
+    position: absolute;
+    z-index: 500;
+    width: 100%;
+    height: 100%;
+    color: var(--white);
+    background-color: hsl(0 100% 0% / 0.9);
   }
 
   .overlay-content {
     place-self: center;
     z-index: 10;
+  }
 
-    .headline {
-      place-self: center;
-      font-size: 150%;
-    }
+  .overlay-content .headline {
+    place-self: center;
+    font-size: 150%;
+  }
 
-    .body {
-      --align: start;
-    }
+  .overlay-content .body {
+    --align: start;
   }
 
   .button-group {

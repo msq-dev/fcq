@@ -11,20 +11,24 @@
   export let active = false
   export let centerContent = true
   export let btnText = ""
+  export let bgColor = "hsl(0 100% 0% / 0.9)"
+  export let winner = false
+  export let noFlex = false
 </script>
 
 {#if active}
   <div
     class="modal | grid"
     style:place-content={centerContent ? "center" : ""}
+    style:background-color={bgColor}
     on:click|self={() => close()}
-    transition:fade={{ duration: 250 }}
+    transition:fade={{ duration: 200 }}
   >
     <div class="modal-content | container flex-col">
-      <div class="title | bold upper">
+      <div class="title | bold upper" class:winner>
         <slot name="title" />
       </div>
-      <div class="body | flex-col">
+      <div class="body" class:flex-col={!noFlex}>
         <slot name="body" />
       </div>
 
@@ -43,9 +47,9 @@
     inset: 0;
     width: 100%;
     height: 100%;
+    padding: 1em;
     z-index: 100;
     color: var(--white);
-    background-color: rgb(0 0 0 / var(--opacity, 0.88));
   }
 
   .modal-content {
@@ -53,7 +57,11 @@
   }
 
   .title {
-    font-size: 150%;
+    font-size: 200%;
+  }
+
+  .title.winner {
+    color: var(--winner);
   }
 
   .body {

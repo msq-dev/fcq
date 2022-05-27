@@ -83,6 +83,6 @@
   }
 
   .circle.winner {
-    border: 0.2em solid gold;
+    border: 0.2em solid var(--winner);
   }
 </style>

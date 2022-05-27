@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte"
-  import { statNpc, sessionRunning } from "../stores/game"
+  import { sessionRunning } from "../stores/game"
   import { dictionary as t } from "../stores/settings"
 
   export let stat: Stat

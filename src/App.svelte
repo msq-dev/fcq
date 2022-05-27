@@ -47,7 +47,9 @@
           <a href="/" use:link use:active>
             <IconHome size={18} stroke={1.5} />
           </a>
-          <a href="/game" use:link use:active>{$t.play}</a>
+          {#if $location !== "/rules"}
+            <a href="/game" use:link use:active>{$t.play}</a>
+          {/if}
           <a href="/browse" use:link use:active>{$t.browse}</a>
           <a href="/about" use:link use:active>{$t.about}</a>
           <a href="/settings" use:link use:active>

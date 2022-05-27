@@ -6,7 +6,7 @@
     videoId,
     videoTitle,
     videoDesc,
-    composerName,
+    // composerName,
     closeOverlay,
   } from "../stores/youtube"
 
@@ -18,9 +18,9 @@
 
 <div class="yt-overlay" transition:fade={{ duration: 200 }}>
   <div class="container">
-    <div class="name | fit-text" style="--text-length: {$composerName.length}">
+    <!-- <div class="name | fit-text" style="--text-length: {$composerName.length}">
       {$composerName}
-    </div>
+    </div> -->
 
     <div class="yt-iframe">
       {#if !$ytCookiesAccepted}
@@ -77,11 +77,11 @@
     justify-content: center;
   }
 
-  .name {
+  /* .name {
     --scale: 18;
     font-size: 90%;
     font-weight: var(--fw-bold);
-  }
+  } */
 
   .yt-iframe {
     align-self: center;
@@ -106,7 +106,7 @@
 
   .overlay-footer {
     width: 100%;
-    margin-top: 0.3em;
+    margin-top: 0.75em;
   }
 
   .btn-close {
@@ -116,6 +116,6 @@
   }
 
   .app-title {
-    color: var(--gray-400);
+    color: var(--gray-200);
   }
 </style>

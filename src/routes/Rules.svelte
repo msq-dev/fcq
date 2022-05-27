@@ -9,21 +9,23 @@
   {#if $appLanguage === "de"}
     <p>
       Computer und Spieler*in erhalten die gleiche Anzahl Karten. Wer an der
-      Reihe ist, wählt eine Kategorie mit dem Wert aus, der am
-      vielversprechendsten erscheint. Die Verliererkarte wird ermittelt und
-      wandert in den gegnerischen Stapel. Wer die Siegkarte besitzt, ist am Zug.
-      Bei gleichen Werten entscheidet sich in der darauffolgenden Stichrunde,
-      wer schließlich alle vier Karten gewinnt. Das Spiel endet, wenn eine Seite
-      alle Karten erobert hat.
+      Reihe ist, wählt eine Kategorie („Anzahl der Werke“, „Nächstes
+      Jubiläumsjahr“ etc.) mit dem Wert aus, der am vielversprechendsten
+      erscheint. Die Verliererkarte wird ermittelt und wandert in den
+      gegnerischen Stapel. Wer die Siegkarte besitzt, ist am Zug. Bei gleichen
+      Werten entscheidet sich in der darauffolgenden Stichrunde, wer schließlich
+      alle gespielten Karten gewinnt. Das Spiel endet, wenn eine Seite alle
+      Karten erobert hat.
     </p>
   {:else}
     <p>
       The computer and the player receive the same number of cards. The player
-      whose turn it is chooses a category with the value that seems most
-      promising. The losing card is determined and goes into the opponent's
-      pile. It is the turn of the player who has the winning card. If the values
-      are equal, the next trick round decides who finally wins all four cards.
-      The game ends when one side has captured all the cards.
+      whose turn it is chooses a category ("Number of works", "Upcoming
+      anniversary", etc.) with the value that seems most promising. The losing
+      card is determined and goes into the opponent's pile. It is the turn of
+      the player who has the winning card. If the values are equal, the next
+      trick round decides who finally wins all played cards. The game ends when
+      one side has captured all the cards.
     </p>
   {/if}
   <ButtonNav
@@ -31,6 +33,8 @@
     href={"/game"}
     color={"var(--white)"}
     bgColor={"var(--teal-400)"}
+    width="fit-content"
+    placeSelf="center"
   />
 </BasePage>
 

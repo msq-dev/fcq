@@ -32,6 +32,19 @@ export const statNpc = writable(null)
 export const currentCardUser = derived(deckUser, ($deckUser) => $deckUser[0])
 export const currentCardNpc = derived(deckNpc, ($deckNpc) => $deckNpc[0])
 
+export const itsADraw = derived(
+  [cardsPlayed, statUser, statNpc],
+  ([$cardsPlayed, $statUser, $statNpc], set) => {
+    if ($cardsPlayed.length) {
+      if ($statUser !== null && $statNpc !== null) {
+        $statUser.value === $statNpc.value ? set(true) : set(false)
+      }
+    } else {
+      set(false)
+    }
+  }
+)
+
 export function resetGame() {
   gameReady.reset()
   showEvaluation.set(false)

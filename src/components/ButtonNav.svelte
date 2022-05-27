@@ -8,6 +8,8 @@
   export let bgColor = "initial"
   export let col = ""
   export let row = 0
+  export let width = ""
+  export let placeSelf = ""
 </script>
 
 <a
@@ -17,6 +19,8 @@
   style:background-color={bgColor}
   style:grid-column={col}
   style:grid-row={row}
+  style:width
+  style:place-self={placeSelf}
   use:link
 >
   <FadingElement name={text}>

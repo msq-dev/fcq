@@ -15,18 +15,17 @@
     currentCardNpc,
     statUser,
     statNpc,
+    itsADraw,
     resetGame,
   } from "../stores/game"
   import ScreenWaiting from "../components/ScreenWaiting.svelte"
   import Modal from "../components/Modal.svelte"
-  import BaseImage from "../components/BaseImage.svelte"
   import Card from "../components/Card.svelte"
-  import CardName from "../components/CardName.svelte"
   import OverlayGameOver from "../components/OverlayGameOver.svelte"
   import SingleCard from "../components/SingleCard.svelte"
   import InfoBox from "../components/InfoBox.svelte"
   import { shuffle, fetchData, makePlayingCards } from "../utils/utils"
-  import CardStat from "../components/CardStat.svelte"
+  import EvaluationItem from "../components/EvaluationItem.svelte"
 
   let deck = []
   let userBegins: boolean = null
@@ -36,6 +35,11 @@
   let showNpcCard = false
 
   $: isGameOver = userWinsGame !== null
+  $: modalBgColor = !$itsADraw
+    ? userWins
+      ? "hsl(60 100% 0% / 0.9)"
+      : "hsl(0 100% 2% / 0.9)"
+    : "hsl(0 100% 0% / 0.9)"
 
   async function getGameReadyState() {
     return await gameReady.setup()
@@ -256,39 +260,50 @@
     <Modal
       active={$showEvaluation}
       btnText={$t.continue}
+      bgColor={modalBgColor}
+      noFlex
+      winner={!$itsADraw && userWins}
       on:close={() => handleEvaluation()}
     >
       <svelte:fragment slot="title">
-        {#if $statUser?.value === $statNpc?.value}
+        {#if $itsADraw}
           {$t.draw}
         {:else}
           {userWins ? $t.youWin : $t.youLose}
         {/if}
       </svelte:fragment>
       <svelte:fragment slot="body">
-        <span
-          class="check-her-out"
-          data-text={$t.checkHerOut}
-          on:click|stopPropagation={() => (showNpcCard = true)}
-        >
-          <BaseImage
+        {#if !userWins}
+          <EvaluationItem
             imageUrl={$currentCardNpc.imageUrl}
-            circle
-            winner={!userWins}
+            name={$currentCardNpc.name}
+            stat={$statNpc}
+            on:checkHerOut={() => (showNpcCard = true)}
+            winner
+            isNpc
           />
-        </span>
-        <CardName name={$currentCardNpc.name} />
-        <CardStat stat={$statNpc} single />
-
-        <div style="height: 2rem;" />
-
-        <BaseImage
-          imageUrl={$currentCardUser.imageUrl}
-          circle
-          winner={userWins}
-        />
-        <CardName name={$currentCardUser.name} />
-        <CardStat stat={$statUser} single />
+          <div style="height: 2rem;" />
+          <EvaluationItem
+            imageUrl={$currentCardUser.imageUrl}
+            name={$currentCardUser.name}
+            stat={$statUser}
+          />
+        {:else}
+          <EvaluationItem
+            imageUrl={$currentCardUser.imageUrl}
+            name={$currentCardUser.name}
+            stat={$statUser}
+            winner
+          />
+          <div style="height: 2rem;" />
+          <EvaluationItem
+            imageUrl={$currentCardNpc.imageUrl}
+            name={$currentCardNpc.name}
+            stat={$statNpc}
+            on:checkHerOut={() => (showNpcCard = true)}
+            isNpc
+          />
+        {/if}
 
         <SingleCard
           active={showNpcCard}
@@ -318,33 +333,5 @@
   .table {
     position: relative;
     place-items: center;
-  }
-
-  .check-her-out {
-    position: relative;
-    align-self: center;
-  }
-
-  .check-her-out::before {
-    content: attr(data-text);
-    position: absolute;
-    left: -180%;
-    top: 0;
-    width: 200%;
-    font-size: 80%;
-    font-weight: var(--fw-bold);
-    color: var(--blue-300);
-    transform: rotate(-15deg);
-  }
-
-  .check-her-out::after {
-    content: "";
-    position: absolute;
-    left: -185%;
-    top: -45%;
-    width: 240%;
-    height: 240%;
-    background-repeat: no-repeat;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.dev/svgjs' viewBox='0 0 800 800'%3E%3Cg stroke-width='20' stroke='hsl(201, 72%25, 55%25)' fill='none' stroke-linecap='round' stroke-linejoin='round' transform='rotate(343, 400, 400)'%3E%3Cpath d='M335.52071380615234 314.3020248413086Q243.52071380615234 540.3020248413086 489.52071380615234 468.3020248413086 ' marker-end='url(%23SvgjsMarker1448)'%3E%3C/path%3E%3C/g%3E%3Cdefs%3E%3Cmarker markerWidth='6' markerHeight='6' refX='3' refY='3' viewBox='0 0 6 6' orient='auto' id='SvgjsMarker1448'%3E%3Cpolyline points='0,3 3,1.5 0,0' fill='none' stroke-width='1' stroke='hsl(201, 72%25, 55%25)' stroke-linecap='round' transform='matrix(1,0,0,1,1,1.5)' stroke-linejoin='round'%3E%3C/polyline%3E%3C/marker%3E%3C/defs%3E%3C/svg%3E");
   }
 </style>
